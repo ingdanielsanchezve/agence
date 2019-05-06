@@ -14,25 +14,7 @@ $(document).ready(function(){
 	}, 500);
 
 	/* Scroll */
-	// if(jQuery.browser.mobile == false) {
-	// 	function initScroll(){
-	// 		$('.custom-scroll').jScrollPane({
-	// 			autoReinitialise: true,
-	// 			autoReinitialiseDelay: 100
-	// 		});
-	// 	}
-
-	// 	initScroll();
-
-	// 	$(window).resize(function() {
-	// 		initScroll();
-	// 	});
-	// }
-
-	// /* Sidebar - if mobile */
-	// if(jQuery.browser.mobile == true) {
-	// 	$('body').removeClass('fixed');
-	// }
+	
 
     /* Sidebar - on click */
 	$('.large-sidebar .site-sidebar li.with-sub').each(function() {

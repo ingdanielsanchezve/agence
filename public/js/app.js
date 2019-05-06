@@ -1878,6 +1878,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'listConsultores',
@@ -37508,7 +37517,7 @@ var render = function() {
             _c("div", { staticClass: "box bg-white" }, [
               _c(
                 "table",
-                { staticClass: "table table-grey-head table-hover m-md-b-1" },
+                { staticClass: "table table-grey-head table-hover m-md-b-0" },
                 [
                   _c("thead", [
                     _c("tr", [
@@ -37555,7 +37564,46 @@ var render = function() {
                       ])
                     }),
                     0
-                  )
+                  ),
+                  _vm._v(" "),
+                  _c("tfoot", [
+                    _c("tr", [
+                      _c("th", [_vm._v("Saldo")]),
+                      _vm._v(" "),
+                      _c("th", [
+                        _vm._v(
+                          _vm._s(_vm._f("currency")(item.totals.tot_receita))
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", [
+                        _vm._v(
+                          _vm._s(_vm._f("currency")(item.totals.tot_custo_fixo))
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("th", [
+                        _vm._v(
+                          _vm._s(_vm._f("currency")(item.totals.tot_commisao))
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "th",
+                        {
+                          class: {
+                            "text-primary": item.totals.tot_lucro > 0,
+                            "text-danger": item.totals.tot_lucro <= 0
+                          }
+                        },
+                        [
+                          _vm._v(
+                            _vm._s(_vm._f("currency")(item.totals.tot_lucro))
+                          )
+                        ]
+                      )
+                    ])
+                  ])
                 ]
               )
             ])

@@ -30,7 +30,7 @@
 		<script type="text/javascript" src="{{ asset('js/neptune.js') }}"></script>
 
 		<!-- Consultores JS -->	
-		<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>		
+		<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 
 	</body>
 </html>

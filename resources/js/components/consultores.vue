@@ -83,7 +83,7 @@
 
             <div class="col-md-12">
                 <div class="box bg-white">
-                    <table class="table table-grey-head table-hover m-md-b-1">
+                    <table class="table table-grey-head table-hover m-md-b-0">
                         <thead>
                             <tr>
                                 <th colspan="5">{{item.name}}</th>
@@ -105,6 +105,15 @@
                                 <th v-bind:class="{ 'text-primary': (data.lucro > 0), 'text-danger': (data.lucro <= 0) }">{{data.lucro | currency}}</th>
                             </tr>                                
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Saldo</th>
+                                <th>{{item.totals.tot_receita | currency}}</th>
+                                <th>{{item.totals.tot_custo_fixo | currency}}</th>
+                                <th>{{item.totals.tot_commisao | currency}}</th>
+                                <th v-bind:class="{ 'text-primary': (item.totals.tot_lucro > 0), 'text-danger': (item.totals.tot_lucro <= 0) }">{{item.totals.tot_lucro | currency}}</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>

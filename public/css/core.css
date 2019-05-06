@@ -6879,7 +6879,7 @@ select.form-control:not([size]):not([multiple]) {
   height: 33px;
 }
 
-.table-grey-head thead {
+.table-grey-head thead, .table-grey-head tfoot {
   background-color: #f5f5f5;
 }
 
