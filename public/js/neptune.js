@@ -78,13 +78,13 @@ $(document).ready(function(){
 	});
 
 	/* Sidebar - overlay */
-	$('.site-sidebar-overlay').click(function() {
-		$('.site-header .collapse-button').removeClass('active');
-		$('body').removeClass('site-sidebar-opened');
-		if(jQuery.browser.mobile == false){
-			$('html').css('overflow','auto');
-		}
-	});
+	// $('.site-sidebar-overlay').click(function() {
+	// 	$('.site-header .collapse-button').removeClass('active');
+	// 	$('body').removeClass('site-sidebar-opened');
+	// 	if(jQuery.browser.mobile == false){
+	// 		$('html').css('overflow','auto');
+	// 	}
+	// });
 
 	/* Sidebar second - toggle */
 	$('.site-sidebar-second-toggle').click(function() {

@@ -1887,7 +1887,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'listConsultores',
@@ -1945,7 +1944,6 @@ __webpack_require__.r(__webpack_exports__);
     listRelatorio: function listRelatorio() {
       var _this2 = this;
 
-      document.getElementById('pieChart').style.display = 'none';
       _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getRelatorio({
         fromDate: this.fromDate,
         toDate: this.toDate,
@@ -1957,22 +1955,13 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     pieChart: function pieChart() {
-      $('.itemRelatorio').remove();
-      document.getElementById('pieChart').textContent = "";
-      document.getElementById('pieChart').style.display = 'block';
       _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getPieChartData({
         fromDate: this.fromDate,
         toDate: this.toDate,
         seleccionados: this.seleccionados
       }).then(function (chartData) {
-        var json = {
-          "chart": {
-            "type": "pie",
-            "container": "pieChart"
-          }
-        };
-        json.chart.data = chartData;
-        var chart = anychart.fromJson(json);
+        var chart = anychart.pie(chartData);
+        chart.container('chart');
         chart.draw();
       })["catch"](function (error) {
         return console.log(error);
@@ -37568,7 +37557,7 @@ var render = function() {
       ]),
       _vm._v(" "),
       _vm._l(_vm.listado, function(item) {
-        return _c("div", { staticClass: "itemRelatorio row row-md m-b-2" }, [
+        return _c("div", { staticClass: "row row-md m-b-2" }, [
           _c("div", { staticClass: "col-md-12" }, [
             _c("div", { staticClass: "box bg-white" }, [
               _c(
@@ -37589,27 +37578,28 @@ var render = function() {
                     "tbody",
                     _vm._l(item.receita, function(data) {
                       return _c("tr", [
-                        _c("td", [
+                        _c("td", { staticClass: "small" }, [
                           _vm._v(
                             _vm._s(data.mes_name) + " de " + _vm._s(data.ano)
                           )
                         ]),
                         _vm._v(" "),
-                        _c("td", [
+                        _c("td", { staticClass: "small" }, [
                           _vm._v(_vm._s(_vm._f("currency")(data.receita)))
                         ]),
                         _vm._v(" "),
-                        _c("td", [
+                        _c("td", { staticClass: "small" }, [
                           _vm._v(_vm._s(_vm._f("currency")(data.custo_fixo)))
                         ]),
                         _vm._v(" "),
-                        _c("td", [
+                        _c("td", { staticClass: "small" }, [
                           _vm._v(_vm._s(_vm._f("currency")(data.commisao)))
                         ]),
                         _vm._v(" "),
                         _c(
                           "th",
                           {
+                            staticClass: "small",
                             class: {
                               "text-primary": data.lucro > 0,
                               "text-danger": data.lucro <= 0
@@ -37624,21 +37614,21 @@ var render = function() {
                   _vm._v(" "),
                   _c("tfoot", [
                     _c("tr", [
-                      _c("th", [_vm._v("Saldo")]),
+                      _c("th", { staticClass: "small" }, [_vm._v("Saldo")]),
                       _vm._v(" "),
-                      _c("th", [
+                      _c("th", { staticClass: "small" }, [
                         _vm._v(
                           _vm._s(_vm._f("currency")(item.totals.tot_receita))
                         )
                       ]),
                       _vm._v(" "),
-                      _c("th", [
+                      _c("th", { staticClass: "small" }, [
                         _vm._v(
                           _vm._s(_vm._f("currency")(item.totals.tot_custo_fixo))
                         )
                       ]),
                       _vm._v(" "),
-                      _c("th", [
+                      _c("th", { staticClass: "small" }, [
                         _vm._v(
                           _vm._s(_vm._f("currency")(item.totals.tot_commisao))
                         )
@@ -37647,6 +37637,7 @@ var render = function() {
                       _c(
                         "th",
                         {
+                          staticClass: "small",
                           class: {
                             "text-primary": item.totals.tot_lucro > 0,
                             "text-danger": item.totals.tot_lucro <= 0
@@ -37667,7 +37658,7 @@ var render = function() {
         ])
       }),
       _vm._v(" "),
-      _c("div", { staticClass: "row row-md m-b-2", attrs: { id: "pieChart" } })
+      _c("div", { staticClass: "row row-md m-b-2", attrs: { id: "chart" } })
     ],
     2
   )
@@ -37710,15 +37701,15 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("tr", [
-      _c("th", [_vm._v("Período")]),
+      _c("th", { staticClass: "small" }, [_vm._v("Período")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Receita Líquida")]),
+      _c("th", { staticClass: "small" }, [_vm._v("Receita Líquida")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Custo Fixo")]),
+      _c("th", { staticClass: "small" }, [_vm._v("Custo Fixo")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Comissão")]),
+      _c("th", { staticClass: "small" }, [_vm._v("Comissão")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Lucro")])
+      _c("th", { staticClass: "small" }, [_vm._v("Lucro")])
     ])
   }
 ]

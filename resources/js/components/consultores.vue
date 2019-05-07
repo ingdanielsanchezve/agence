@@ -79,8 +79,7 @@
             <div class="text-muted m-b-1">Haga click sobre el nombre del consultor para seleccionarlo</div>
 
         </div>
-        <div class="itemRelatorio row row-md m-b-2" v-for="item in listado">
-
+        <div class="row row-md m-b-2" v-for="item in listado">
             <div class="col-md-12">
                 <div class="box bg-white">
                     <table class="table table-grey-head table-hover m-md-b-0">
@@ -89,36 +88,36 @@
                                 <th colspan="5">{{item.name}}</th>
                             </tr>
                             <tr>
-                                <th>Período</th>
-                                <th>Receita Líquida</th>
-                                <th>Custo Fixo</th>
-                                <th>Comissão</th>
-                                <th>Lucro</th>
+                                <th class="small">Período</th>
+                                <th class="small">Receita Líquida</th>
+                                <th class="small">Custo Fixo</th>
+                                <th class="small">Comissão</th>
+                                <th class="small">Lucro</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="data in item.receita">
-                                <td>{{data.mes_name}} de {{data.ano}}</td>
-                                <td>{{data.receita | currency}}</td>
-                                <td>{{data.custo_fixo | currency}}</td>
-                                <td>{{data.commisao | currency}}</td>
-                                <th v-bind:class="{ 'text-primary': (data.lucro > 0), 'text-danger': (data.lucro <= 0) }">{{data.lucro | currency}}</th>
+                                <td class="small">{{data.mes_name}} de {{data.ano}}</td>
+                                <td class="small">{{data.receita | currency}}</td>
+                                <td class="small">{{data.custo_fixo | currency}}</td>
+                                <td class="small">{{data.commisao | currency}}</td>
+                                <th class="small" v-bind:class="{ 'text-primary': (data.lucro > 0), 'text-danger': (data.lucro <= 0) }">{{data.lucro | currency}}</th>
                             </tr>                                
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>Saldo</th>
-                                <th>{{item.totals.tot_receita | currency}}</th>
-                                <th>{{item.totals.tot_custo_fixo | currency}}</th>
-                                <th>{{item.totals.tot_commisao | currency}}</th>
-                                <th v-bind:class="{ 'text-primary': (item.totals.tot_lucro > 0), 'text-danger': (item.totals.tot_lucro <= 0) }">{{item.totals.tot_lucro | currency}}</th>
+                                <th class="small">Saldo</th>
+                                <th class="small">{{item.totals.tot_receita | currency}}</th>
+                                <th class="small">{{item.totals.tot_custo_fixo | currency}}</th>
+                                <th class="small">{{item.totals.tot_commisao | currency}}</th>
+                                <th class="small" v-bind:class="{ 'text-primary': (item.totals.tot_lucro > 0), 'text-danger': (item.totals.tot_lucro <= 0) }">{{item.totals.tot_lucro | currency}}</th>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
         </div>
-        <div id="pieChart" class="row row-md m-b-2">
+        <div id="chart" class="row row-md m-b-2">
         </div>
     </div>
 </template>    
@@ -176,7 +175,6 @@
                     }
                 },
                 listRelatorio: function(){
-                    document.getElementById('pieChart').style.display = 'none';
                     ConsultoresAPI.getRelatorio(
                         {
                             fromDate: this.fromDate,
@@ -190,9 +188,6 @@
                 },
                 pieChart: function(){
 
-                    $('.itemRelatorio').remove()
-                    document.getElementById('pieChart').textContent = "";
-                    document.getElementById('pieChart').style.display = 'block';
                     ConsultoresAPI.getPieChartData(
                         {
                             fromDate: this.fromDate,
@@ -201,17 +196,9 @@
                         })
                         .then(chartData =>{
 
-                            var json = {
-                                "chart": {
-                                    "type": "pie",
-                                    "container": "pieChart"
-                                }
-                            };
-                            
-                            json.chart.data = chartData;
-                            var chart = anychart.fromJson(json);
-                            chart.draw();
-
+                            var chart = anychart.pie(chartData);
+                                chart.container('chart');
+                                chart.draw();
 
                         })
                         .catch(error => console.log(error))                    
