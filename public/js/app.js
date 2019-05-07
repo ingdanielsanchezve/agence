@@ -37375,7 +37375,7 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "div",
-                { staticClass: "items-list" },
+                { staticClass: "items-list items-container" },
                 _vm._l(_vm.consultores, function(consultor, index) {
                   return _c(
                     "div",
@@ -37431,7 +37431,7 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "div",
-                { staticClass: "items-list" },
+                { staticClass: "items-list items-container" },
                 _vm._l(_vm.seleccionados, function(consultor, index) {
                   return _c(
                     "div",

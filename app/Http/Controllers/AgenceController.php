@@ -57,15 +57,6 @@ class AgenceController extends Controller
                         ->whereBetween('mes', [$fromDate[1], $toDate[1]])
                         ->get();
 
-        //    $totals = DB::table('relatorio')
-        //                 ->where('co_usuario', $user->co_usuario)
-        //                 ->whereBetween('ano', [$fromDate[0], $toDate[0]])
-        //                 ->whereBetween('mes', [$fromDate[1], $toDate[1]])
-        //                 ->sum('receita')
-        //                 ->sum('custo_fixo')
-        //                 ->sum('commisao')
-        //                 ->sum('lucro');
-
            $resp[] = ['name' => $user->no_usuario, 'receita' => $receita, 'totals' => $totals->toArray()[0]];
 
         }        

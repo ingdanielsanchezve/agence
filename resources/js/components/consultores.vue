@@ -17,7 +17,7 @@
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-header text-uppercase"><b>Listado de Consultores</b></div>
-                        <div class="items-list">
+                        <div class="items-list items-container">
                             
                             <div class="il-item" v-for="(consultor, index) in consultores" @click="moveItemTo('selected', consultor, index)">
                                 <a class="text-black">
@@ -39,7 +39,7 @@
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-header text-uppercase"><b>Consultores Seleccionados</b></div>
-                        <div class="items-list">
+                        <div class="items-list items-container">
                             
                             <div class="il-item-left" v-for="(consultor, index) in seleccionados" @click="moveItemTo('consultores', consultor, index)">
                                 <a class="text-black">
