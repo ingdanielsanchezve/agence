@@ -69,7 +69,7 @@
                             <i class="ti-bar-chart pull-xs-right"></i> Gráfico
                         </button>
 
-                        <button type="button" class="btn bg-linkedin btn-block waves-effect waves-light">
+                        <button @click="pieChart" type="button" class="btn bg-linkedin btn-block waves-effect waves-light">
                             <i class="ti-pie-chart pull-xs-right"></i> Pizza
                         </button>
 
@@ -118,7 +118,8 @@
                 </div>
             </div>
         </div>
-
+        <div id="pieChart" class="row row-md m-b-2">
+        </div>
     </div>
 </template>    
 <script>
@@ -185,6 +186,36 @@
                             this.listado = listado
                         })
                         .catch(error => console.log(error))
+                },
+                pieChart: function(){
+
+                    document.getElementById('pieChart').textContent = "";
+                    
+
+
+                    ConsultoresAPI.getPieChartData(
+                        {
+                            fromDate: this.fromDate,
+                            toDate: this.toDate,
+                            seleccionados: this.seleccionados
+                        })
+                        .then(chartData =>{
+
+                            var json = {
+                                "chart": {
+                                    "type": "pie",
+                                    "container": "pieChart"
+                                }
+                            };
+                            
+                            json.chart.data = chartData;
+                            var chart = anychart.fromJson(json);
+                            chart.draw();
+
+
+                        })
+                        .catch(error => console.log(error))                    
+
                 }
             },
             filters: {

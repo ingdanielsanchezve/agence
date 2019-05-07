@@ -13,5 +13,12 @@ export default {
                     .then(function (response) {
                         return response.data;
                     })
-    }
+    },
+
+    getPieChartData(params){
+        return axios.post('/piedata', params)
+                    .then(function (response) {
+                        return response.data;
+                    })
+    },
 }

@@ -16,3 +16,5 @@ Route::get('/', 'AgenceController@index')->name('notas.index');
 Route::get('/consultores', 'AgenceController@getConsultores');
 
 Route::post('/relatorio', 'AgenceController@getRelatorio');
+
+Route::post('/piedata', 'AgenceController@getPieChartData');

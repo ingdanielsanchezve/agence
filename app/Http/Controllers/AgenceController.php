@@ -65,5 +65,33 @@ class AgenceController extends Controller
 
     }
 
+    function getPieChartData(Request $request){
+
+        $fromDate = explode("-", $request->input('fromDate'));
+        $toDate = explode("-", $request->input('toDate'));
+        $colors= ["#a0d6f6", "#c6d8f6", "#90b2ec", "#4e7ccc", "#3b3da0", "#2c0437"];
+        $resp = [];
+        $i = 0;
+
+        $receita = DB::table('relatorio')
+                    ->select(DB::raw('no_usuario x, round(SUM(receita), 2) AS value'))
+                    ->whereIn('co_usuario', array_column($request->input('seleccionados'), 'co_usuario'))
+                    ->whereBetween('ano', [$fromDate[0], $toDate[0]])
+                    ->whereBetween('mes', [$fromDate[1], $toDate[1]])
+                    ->groupBy('co_usuario')
+                    ->get();
+
+        foreach($receita as $val){
+
+            $resp[] = ['x' => $val->x, 'value' => $val->value, 'fill' => $colors[$i]];
+            $i++;
+
+        }
+
+        return json_encode($resp);
+
+
+    }
+
 
 }

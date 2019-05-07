@@ -8799,7 +8799,7 @@ a.text-grey:focus .underline, a.text-grey:hover .underline {
 }
 
 .items-container{
-  max-height: 200px;
+  max-height: 150px;
   overflow-y: auto;
 }
 

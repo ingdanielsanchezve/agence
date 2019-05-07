@@ -1887,6 +1887,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'listConsultores',
@@ -1950,6 +1951,26 @@ __webpack_require__.r(__webpack_exports__);
         seleccionados: this.seleccionados
       }).then(function (listado) {
         _this2.listado = listado;
+      })["catch"](function (error) {
+        return console.log(error);
+      });
+    },
+    pieChart: function pieChart() {
+      document.getElementById('pieChart').textContent = "";
+      _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getPieChartData({
+        fromDate: this.fromDate,
+        toDate: this.toDate,
+        seleccionados: this.seleccionados
+      }).then(function (chartData) {
+        var json = {
+          "chart": {
+            "type": "pie",
+            "container": "pieChart"
+          }
+        };
+        json.chart.data = chartData;
+        var chart = anychart.fromJson(json);
+        chart.draw();
       })["catch"](function (error) {
         return console.log(error);
       });
@@ -37501,7 +37522,19 @@ var render = function() {
               _vm._v(" "),
               _vm._m(4),
               _vm._v(" "),
-              _vm._m(5)
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "btn bg-linkedin btn-block waves-effect waves-light",
+                  attrs: { type: "button" },
+                  on: { click: _vm.pieChart }
+                },
+                [
+                  _c("i", { staticClass: "ti-pie-chart pull-xs-right" }),
+                  _vm._v(" Pizza\n                    ")
+                ]
+              )
             ]
           )
         ]),
@@ -37526,7 +37559,7 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _vm._m(6, true)
+                    _vm._m(5, true)
                   ]),
                   _vm._v(" "),
                   _c(
@@ -37609,7 +37642,9 @@ var render = function() {
             ])
           ])
         ])
-      })
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "row row-md m-b-2", attrs: { id: "pieChart" } })
     ],
     2
   )
@@ -37660,22 +37695,6 @@ var staticRenderFns = [
       [
         _c("i", { staticClass: "ti-bar-chart pull-xs-right" }),
         _vm._v(" Gráfico\n                    ")
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "btn bg-linkedin btn-block waves-effect waves-light",
-        attrs: { type: "button" }
-      },
-      [
-        _c("i", { staticClass: "ti-pie-chart pull-xs-right" }),
-        _vm._v(" Pizza\n                    ")
       ]
     )
   },
@@ -50017,6 +50036,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   getRelatorio: function getRelatorio(params) {
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/relatorio', params).then(function (response) {
+      return response.data;
+    });
+  },
+  getPieChartData: function getPieChartData(params) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/piedata', params).then(function (response) {
       return response.data;
     });
   }
