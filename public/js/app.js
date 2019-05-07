@@ -2010,7 +2010,9 @@ __webpack_require__.r(__webpack_exports__);
         chart.hovered().labels(false);
         chart.legend().enabled(true).fontSize(13).padding([0, 0, 20, 0]);
         chart.interactivity().hoverMode('single');
-        chart.tooltip().positionMode('point').position('center-top').anchor('center-bottom').offsetX(0).offsetY(5).titleFormat('{%X}').format('{%SeriesName} : R$ {%Value}{groupsSeparator: }');
+        chart.tooltip().positionMode('point').position('center-top').anchor('center-bottom').offsetX(0).offsetY(5).titleFormat('{%X}').displayMode('union').format('{%SeriesName} : R$ {%Value}{groupsSeparator: }');
+        var lineSeries = chart.line(resp.cost);
+        lineSeries.name('Custo Fixo Medio').stroke('5 #1e8e3e');
         chart.container('columnChart');
         chart.draw();
       })["catch"](function (error) {

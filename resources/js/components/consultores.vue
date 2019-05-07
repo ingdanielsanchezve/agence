@@ -255,28 +255,33 @@
                                 chart.yAxis().title('Receita');
 
                                 chart.labels()
-                                        .enabled(true)
-                                        .position('center-top')
-                                        .anchor('center-bottom')
-                                        .fontSize(10)
-                                        .format('R$ {%Value}{groupsSeparator: }');
+                                     .enabled(true)
+                                     .position('center-top')
+                                     .anchor('center-bottom')
+                                     .fontSize(10)
+                                     .format('R$ {%Value}{groupsSeparator: }');
                                 chart.hovered().labels(false);
 
                                 chart.legend()
-                                        .enabled(true)
-                                        .fontSize(13)
-                                        .padding([0, 0, 20, 0]);
+                                     .enabled(true)
+                                     .fontSize(13)
+                                     .padding([0, 0, 20, 0]);
 
                                 chart.interactivity().hoverMode('single');
 
                                 chart.tooltip()
-                                        .positionMode('point')
-                                        .position('center-top')
-                                        .anchor('center-bottom')
-                                        .offsetX(0)
-                                        .offsetY(5)
-                                        .titleFormat('{%X}')
-                                        .format('{%SeriesName} : R$ {%Value}{groupsSeparator: }');
+                                     .positionMode('point')
+                                     .position('center-top')
+                                     .anchor('center-bottom')
+                                     .offsetX(0)
+                                     .offsetY(5)
+                                     .titleFormat('{%X}')
+                                     .displayMode('union')
+                                     .format('{%SeriesName} : R$ {%Value}{groupsSeparator: }');
+
+                                var lineSeries = chart.line(resp.cost);
+                                    lineSeries.name('Custo Fixo Medio')
+                                              .stroke('5 #1e8e3e');
 
                                 chart.container('columnChart');
 

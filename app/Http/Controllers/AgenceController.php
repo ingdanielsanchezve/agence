@@ -120,7 +120,7 @@ class AgenceController extends Controller
                         ->whereBetween('mes', [$fromDate[1], $toDate[1]])
                         ->get();
             
-            for($i=0; $i< count($query); $i++){
+            for($i=0; $i < count($query); $i++){
 
                 if(isset($data[$i])){
 
@@ -133,10 +133,26 @@ class AgenceController extends Controller
                 }
 
             }
+
+        }
+
+        $custo = [];
+        $query = DB::table('relatorio')
+                        ->select(DB::RAW("mes_name, ano, SUM(custo_fixo)/COUNT(co_usuario) custo_prom"))
+                        ->whereIn('co_usuario', array_column($request->input('seleccionados'), 'co_usuario'))
+                        ->whereBetween('ano', [$fromDate[0], $toDate[0]])
+                        ->whereBetween('mes', [$fromDate[1], $toDate[1]])
+                        ->groupBy('mes')
+                        ->get();
+
+        foreach($query as $val){
+
+            $custo[] = [$val->mes_name.' '.$val->ano, $val->custo_prom];
+
         }
 
         return json_encode(
-            ['header'  => $header, 'data' => $data]
+            ['header'  => $header, 'data' => $data, 'cost' => $custo]
         );
 
     }
