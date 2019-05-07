@@ -1991,23 +1991,23 @@ __webpack_require__.r(__webpack_exports__);
         fromDate: this.fromDate,
         toDate: this.toDate,
         seleccionados: this.seleccionados
-      }).then(function (data) {
+      }).then(function (resp) {
         $('#columnChart').css('visibility', 'visible').css('height', 400);
         var chartData = {
-          title: ' Receita por Consultor de ' + moment(_this4.fromDate).format("MMMM Y") + ' a ' + moment(_this4.toDate).format("MMMM de Y"),
-          header: ['#', 'Florida', 'Texas'],
-          rows: [['Enero', 6814, 3054], ['Febrero', 7012, 5067], ['Marzo', 8814, 9054]]
+          title: ' Receita por Consultor de ' + moment(_this4.fromDate).format("MMMM Y") + ' a ' + moment(_this4.toDate).format("MMMM Y"),
+          header: resp.header,
+          rows: [resp.data]
         };
         var chart = anychart.column();
         chart.data(chartData);
         chart.animation(true);
-        chart.yAxis().labels().format('${%Value}{groupsSeparator: }');
+        chart.yAxis().labels().format('R$ {%Value}{groupsSeparator: }');
         chart.yAxis().title('Receita');
-        chart.labels().enabled(true).position('center-top').anchor('center-bottom').format('${%Value}{groupsSeparator: }');
+        chart.labels().enabled(true).position('center-top').anchor('center-bottom').format('R$ {%Value}{groupsSeparator: }');
         chart.hovered().labels(false);
         chart.legend().enabled(true).fontSize(13).padding([0, 0, 20, 0]);
         chart.interactivity().hoverMode('single');
-        chart.tooltip().positionMode('point').position('center-top').anchor('center-bottom').offsetX(0).offsetY(5).titleFormat('{%X}').format('{%SeriesName} : ${%Value}{groupsSeparator: }');
+        chart.tooltip().positionMode('point').position('center-top').anchor('center-bottom').offsetX(0).offsetY(5).titleFormat('{%X}').format('{%SeriesName} : R$ {%Value}{groupsSeparator: }');
         chart.container('columnChart');
         chart.draw();
       })["catch"](function (error) {

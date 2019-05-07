@@ -123,8 +123,23 @@ class AgenceController extends Controller
             $data[] = $query;
         }
 
+        $chartData = [];
+        foreach($data as $val){
+
+            if (in_array($val[0]->mes_name.' '.$val[0]->ano, $chartData)) {
+                
+                $chartData[] = $val[0]->receita;
+
+            }else{
+
+                $chartData = [$val[0]->mes_name.' '.$val[0]->ano, $val[0]->receita];
+
+            }
+
+        }
+
         return json_encode(
-            ['header'  => $header, 'data' => $data]
+            ['header'  => $header, 'data' => $chartData]
         );
 
     }

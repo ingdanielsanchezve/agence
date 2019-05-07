@@ -231,17 +231,13 @@
                             toDate: this.toDate,
                             seleccionados: this.seleccionados
                         })
-                        .then(data =>{
+                        .then(resp =>{
 
                                 $('#columnChart').css('visibility', 'visible').css('height', 400)
                                 var chartData = {
-                                    title: ' Receita por Consultor de '+moment(this.fromDate).format("MMMM Y")+' a '+moment(this.toDate).format("MMMM de Y"),
-                                    header: ['#', 'Florida', 'Texas'],
-                                    rows: [
-                                        ['Enero', 6814, 3054],
-                                        ['Febrero', 7012, 5067],
-                                        ['Marzo', 8814, 9054]
-                                    ]
+                                    title: ' Receita por Consultor de '+moment(this.fromDate).format("MMMM Y")+' a '+moment(this.toDate).format("MMMM Y"),
+                                    header: resp.header,
+                                    rows: [resp.data]
                                 };
 
                                 var chart = anychart.column();
@@ -250,7 +246,7 @@
 
                                 chart.animation(true);
 
-                                chart.yAxis().labels().format('${%Value}{groupsSeparator: }');
+                                chart.yAxis().labels().format('R$ {%Value}{groupsSeparator: }');
 
                                 chart.yAxis().title('Receita');
 
@@ -258,7 +254,7 @@
                                         .enabled(true)
                                         .position('center-top')
                                         .anchor('center-bottom')
-                                        .format('${%Value}{groupsSeparator: }');
+                                        .format('R$ {%Value}{groupsSeparator: }');
                                 chart.hovered().labels(false);
 
                                 chart.legend()
@@ -275,7 +271,7 @@
                                         .offsetX(0)
                                         .offsetY(5)
                                         .titleFormat('{%X}')
-                                        .format('{%SeriesName} : ${%Value}{groupsSeparator: }');
+                                        .format('{%SeriesName} : R$ {%Value}{groupsSeparator: }');
 
                                 chart.container('columnChart');
 
