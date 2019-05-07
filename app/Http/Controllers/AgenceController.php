@@ -120,26 +120,23 @@ class AgenceController extends Controller
                         ->whereBetween('mes', [$fromDate[1], $toDate[1]])
                         ->get();
             
-            $data[] = $query;
-        }
+            for($i=0; $i< count($query); $i++){
 
-        $chartData = [];
-        foreach($data as $val){
+                if(isset($data[$i])){
 
-            if (in_array($val[0]->mes_name.' '.$val[0]->ano, $chartData)) {
-                
-                $chartData[] = $val[0]->receita;
+                    $data[$i][] = $query[$i]->receita;
 
-            }else{
+                }else{
 
-                $chartData = [$val[0]->mes_name.' '.$val[0]->ano, $val[0]->receita];
+                    $data[$i] = [$query[$i]->mes_name.' '.$query[$i]->ano, $query[$i]->receita];
+
+                }
 
             }
-
         }
 
         return json_encode(
-            ['header'  => $header, 'data' => $chartData]
+            ['header'  => $header, 'data' => $data]
         );
 
     }

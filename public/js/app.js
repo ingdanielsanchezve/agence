@@ -1936,6 +1936,9 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         this.seleccionados = [];
+        this.listado = [];
+        $('#pieChart').html("");
+        $('#columnChart').html("");
       }
     },
     moveItemTo: function moveItemTo(where, elem, index) {
@@ -1950,13 +1953,13 @@ __webpack_require__.r(__webpack_exports__);
     listRelatorio: function listRelatorio() {
       var _this2 = this;
 
-      $('#pieChart, #columnChart').css('visibility', 'hidden').css('height', 0);
+      $('#pieChart, #columnChart').css('display', 'none').css('height', 0);
       _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getRelatorio({
         fromDate: this.fromDate,
         toDate: this.toDate,
         seleccionados: this.seleccionados
       }).then(function (listado) {
-        $('#receitas').css('visibility', 'visible').css('height', 'auto');
+        $('#receitas').css('display', 'block').css('height', 'auto');
         _this2.listado = listado;
       })["catch"](function (error) {
         return console.log(error);
@@ -1966,13 +1969,13 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
 
       $('#pieChart').html("");
-      $('#receita, #columnChart').css('visibility', 'hidden').css('height', 0);
+      $('#receitas, #columnChart').css('display', 'none').css('height', 0);
       _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getPieChartData({
         fromDate: this.fromDate,
         toDate: this.toDate,
         seleccionados: this.seleccionados
       }).then(function (chartData) {
-        $('#pieChart').css('visibility', 'visible').css('height', 400);
+        $('#pieChart').css('display', 'block').css('height', 400);
         chartData.title = 'Porcentaje de Receita por Consultor de ' + moment(_this3.fromDate).format("MMMM Y") + ' a ' + moment(_this3.toDate).format("MMMM Y");
         var chart = anychart.pie(chartData);
         chart.legend().enabled(true).fontSize(13).padding([0, 0, 20, 0]);
@@ -1986,24 +1989,24 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       $('#columnChart').html("");
-      $('#pieChart, #receitas').css('visibility', 'hidden').css('height', 0);
+      $('#pieChart, #receitas').css('display', 'none').css('height', 0);
       _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getColumnChartData({
         fromDate: this.fromDate,
         toDate: this.toDate,
         seleccionados: this.seleccionados
       }).then(function (resp) {
-        $('#columnChart').css('visibility', 'visible').css('height', 400);
+        $('#columnChart').css('display', 'block').css('height', 400);
         var chartData = {
           title: ' Receita por Consultor de ' + moment(_this4.fromDate).format("MMMM Y") + ' a ' + moment(_this4.toDate).format("MMMM Y"),
           header: resp.header,
-          rows: [resp.data]
+          rows: resp.data
         };
         var chart = anychart.column();
         chart.data(chartData);
         chart.animation(true);
         chart.yAxis().labels().format('R$ {%Value}{groupsSeparator: }');
         chart.yAxis().title('Receita');
-        chart.labels().enabled(true).position('center-top').anchor('center-bottom').format('R$ {%Value}{groupsSeparator: }');
+        chart.labels().enabled(true).position('center-top').anchor('center-bottom').fontSize(10).format('R$ {%Value}{groupsSeparator: }');
         chart.hovered().labels(false);
         chart.legend().enabled(true).fontSize(13).padding([0, 0, 20, 0]);
         chart.interactivity().hoverMode('single');
@@ -37346,84 +37349,84 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "form-group row" }, [
-        _c(
-          "label",
-          {
-            staticClass: "col-xs-1 col-sm-1 col-form-label",
-            attrs: { for: "from-date" }
-          },
-          [_vm._v("De")]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-xs-11 col-sm-3" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.fromDate,
-                expression: "fromDate"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: {
-              type: "month",
-              value: "2017-01",
-              min: "2003-01",
-              max: "2007-12",
-              id: "from-date"
+        _c("div", { staticClass: "col-md-12 col-sm-6" }, [
+          _c(
+            "label",
+            {
+              staticClass: "col-xs-1 col-sm-1 col-form-label",
+              attrs: { for: "from-date" }
             },
-            domProps: { value: _vm.fromDate },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+            [_vm._v("De")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-xs-11 col-sm-3" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.fromDate,
+                  expression: "fromDate"
                 }
-                _vm.fromDate = $event.target.value
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "month",
+                value: "2017-01",
+                min: "2003-01",
+                max: "2007-12",
+                id: "from-date"
+              },
+              domProps: { value: _vm.fromDate },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.fromDate = $event.target.value
+                }
               }
-            }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group row" }, [
-        _c(
-          "label",
-          {
-            staticClass: "col-xs-1 col-sm-1 col-form-label",
-            attrs: { for: "to-date" }
-          },
-          [_vm._v("a")]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-xs-11 col-sm-3" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.toDate,
-                expression: "toDate"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: {
-              type: "month",
-              value: "2017-12",
-              min: "2003-01",
-              max: "2007-12",
-              id: "to-date"
+            })
+          ]),
+          _vm._v(" "),
+          _c(
+            "label",
+            {
+              staticClass: "col-xs-1 col-sm-1 col-form-label",
+              attrs: { for: "to-date" }
             },
-            domProps: { value: _vm.toDate },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+            [_vm._v("a")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-xs-11 col-sm-3" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.toDate,
+                  expression: "toDate"
                 }
-                _vm.toDate = $event.target.value
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "month",
+                value: "2017-12",
+                min: "2003-01",
+                max: "2007-12",
+                id: "to-date"
+              },
+              domProps: { value: _vm.toDate },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.toDate = $event.target.value
+                }
               }
-            }
-          })
+            })
+          ])
         ])
       ]),
       _vm._v(" "),

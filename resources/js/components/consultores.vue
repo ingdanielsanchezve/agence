@@ -4,15 +4,15 @@
             
             <div class="text-muted m-b-1">Selecione o período para Consultar</div>
             <div class="form-group row">
-                <label for="from-date" class="col-xs-1 col-sm-1 col-form-label">De</label>
-                <div class="col-xs-11 col-sm-3">
-                    <input v-model="fromDate" class="form-control" type="month" value="2017-01" min="2003-01" max="2007-12" id="from-date">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="to-date" class="col-xs-1 col-sm-1 col-form-label">a</label>
-                <div class="col-xs-11 col-sm-3">
-                    <input v-model="toDate" class="form-control" type="month" value="2017-12" min="2003-01" max="2007-12" id="to-date">
+                <div class="col-md-12 col-sm-6">
+                    <label for="from-date" class="col-xs-1 col-sm-1 col-form-label">De</label>
+                    <div class="col-xs-11 col-sm-3">
+                        <input v-model="fromDate" class="form-control" type="month" value="2017-01" min="2003-01" max="2007-12" id="from-date">
+                    </div>
+                    <label for="to-date" class="col-xs-1 col-sm-1 col-form-label">a</label>
+                    <div class="col-xs-11 col-sm-3">
+                        <input v-model="toDate" class="form-control" type="month" value="2017-12" min="2003-01" max="2007-12" id="to-date">
+                    </div>
                 </div>
             </div>	
             <div class="row m-b-1">
@@ -169,6 +169,9 @@
                             }
                         }
                         this.seleccionados = [];
+                        this.listado = [];
+                        $('#pieChart').html("");
+                        $('#columnChart').html("");
                     }
                 },
                 moveItemTo: function(where, elem, index){
@@ -181,7 +184,7 @@
                     }
                 },
                 listRelatorio: function(){
-                    $('#pieChart, #columnChart').css('visibility', 'hidden').css('height', 0)
+                    $('#pieChart, #columnChart').css('display', 'none').css('height', 0)
                     ConsultoresAPI.getRelatorio(
                         {
                             fromDate: this.fromDate,
@@ -189,14 +192,14 @@
                             seleccionados: this.seleccionados
                         })
                         .then(listado =>{
-                            $('#receitas').css('visibility', 'visible').css('height', 'auto')
+                            $('#receitas').css('display', 'block').css('height', 'auto')
                             this.listado = listado
                         })
                         .catch(error => console.log(error))
                 },               
                 pieChart: function(){
                     $('#pieChart').html("")
-                    $('#receita, #columnChart').css('visibility', 'hidden').css('height', 0)
+                    $('#receitas, #columnChart').css('display', 'none').css('height', 0)
                     ConsultoresAPI.getPieChartData(
                         {
                             fromDate: this.fromDate,
@@ -205,7 +208,7 @@
                         })
                         .then(chartData =>{
 
-                            $('#pieChart').css('visibility', 'visible').css('height', 400)
+                            $('#pieChart').css('display', 'block').css('height', 400)
                             chartData.title = 'Porcentaje de Receita por Consultor de '+moment(this.fromDate).format("MMMM Y")+' a '+moment(this.toDate).format("MMMM Y");
                             var chart = anychart.pie(chartData);
 
@@ -224,7 +227,8 @@
                 },               
                 columnChart: function(){
                     $('#columnChart').html("")
-                    $('#pieChart, #receitas').css('visibility', 'hidden').css('height', 0)
+                    $('#pieChart, #receitas').css('display', 'none').css('height', 0)
+
                     ConsultoresAPI.getColumnChartData(
                         {
                             fromDate: this.fromDate,
@@ -233,11 +237,11 @@
                         })
                         .then(resp =>{
 
-                                $('#columnChart').css('visibility', 'visible').css('height', 400)
+                                $('#columnChart').css('display', 'block').css('height', 400)
                                 var chartData = {
                                     title: ' Receita por Consultor de '+moment(this.fromDate).format("MMMM Y")+' a '+moment(this.toDate).format("MMMM Y"),
                                     header: resp.header,
-                                    rows: [resp.data]
+                                    rows: resp.data
                                 };
 
                                 var chart = anychart.column();
@@ -254,6 +258,7 @@
                                         .enabled(true)
                                         .position('center-top')
                                         .anchor('center-bottom')
+                                        .fontSize(10)
                                         .format('R$ {%Value}{groupsSeparator: }');
                                 chart.hovered().labels(false);
 
