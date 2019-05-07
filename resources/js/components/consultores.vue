@@ -61,15 +61,15 @@
                 <div class="col-md-3 col-md-offset-1 m-b-2 m-md-b-0">
 
 
-                        <button @click="listRelatorio" type="button" class="btn bg-facebook btn-block waves-effect waves-light">
+                        <button @click="listRelatorio" v-bind:disabled="seleccionados.length == 0" type="button" class="btn bg-facebook btn-block waves-effect waves-light">
                             <i class="ti-menu pull-xs-right"></i> Relatorio
                         </button>
 
-                        <button type="button" class="btn bg-twitter btn-block waves-effect waves-light">
+                        <button v-bind:disabled="seleccionados.length == 0" type="button" class="btn bg-twitter btn-block waves-effect waves-light">
                             <i class="ti-bar-chart pull-xs-right"></i> Gráfico
                         </button>
 
-                        <button @click="pieChart" type="button" class="btn bg-linkedin btn-block waves-effect waves-light">
+                        <button @click="pieChart" v-bind:disabled="seleccionados.length == 0" type="button" class="btn bg-linkedin btn-block waves-effect waves-light">
                             <i class="ti-pie-chart pull-xs-right"></i> Pizza
                         </button>
 
@@ -79,7 +79,7 @@
             <div class="text-muted m-b-1">Haga click sobre el nombre del consultor para seleccionarlo</div>
 
         </div>
-        <div class="row row-md m-b-2" v-for="item in listado">
+        <div class="itemRelatorio row row-md m-b-2" v-for="item in listado">
 
             <div class="col-md-12">
                 <div class="box bg-white">
@@ -176,6 +176,7 @@
                     }
                 },
                 listRelatorio: function(){
+                    document.getElementById('pieChart').style.display = 'none';
                     ConsultoresAPI.getRelatorio(
                         {
                             fromDate: this.fromDate,
@@ -189,10 +190,9 @@
                 },
                 pieChart: function(){
 
+                    $('.itemRelatorio').remove()
                     document.getElementById('pieChart').textContent = "";
-                    
-
-
+                    document.getElementById('pieChart').style.display = 'block';
                     ConsultoresAPI.getPieChartData(
                         {
                             fromDate: this.fromDate,

@@ -1945,6 +1945,7 @@ __webpack_require__.r(__webpack_exports__);
     listRelatorio: function listRelatorio() {
       var _this2 = this;
 
+      document.getElementById('pieChart').style.display = 'none';
       _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getRelatorio({
         fromDate: this.fromDate,
         toDate: this.toDate,
@@ -1956,7 +1957,9 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     pieChart: function pieChart() {
+      $('.itemRelatorio').remove();
       document.getElementById('pieChart').textContent = "";
+      document.getElementById('pieChart').style.display = 'block';
       _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getPieChartData({
         fromDate: this.fromDate,
         toDate: this.toDate,
@@ -37511,7 +37514,10 @@ var render = function() {
                 {
                   staticClass:
                     "btn bg-facebook btn-block waves-effect waves-light",
-                  attrs: { type: "button" },
+                  attrs: {
+                    disabled: _vm.seleccionados.length == 0,
+                    type: "button"
+                  },
                   on: { click: _vm.listRelatorio }
                 },
                 [
@@ -37520,14 +37526,31 @@ var render = function() {
                 ]
               ),
               _vm._v(" "),
-              _vm._m(4),
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "btn bg-twitter btn-block waves-effect waves-light",
+                  attrs: {
+                    disabled: _vm.seleccionados.length == 0,
+                    type: "button"
+                  }
+                },
+                [
+                  _c("i", { staticClass: "ti-bar-chart pull-xs-right" }),
+                  _vm._v(" Gráfico\n                    ")
+                ]
+              ),
               _vm._v(" "),
               _c(
                 "button",
                 {
                   staticClass:
                     "btn bg-linkedin btn-block waves-effect waves-light",
-                  attrs: { type: "button" },
+                  attrs: {
+                    disabled: _vm.seleccionados.length == 0,
+                    type: "button"
+                  },
                   on: { click: _vm.pieChart }
                 },
                 [
@@ -37545,7 +37568,7 @@ var render = function() {
       ]),
       _vm._v(" "),
       _vm._l(_vm.listado, function(item) {
-        return _c("div", { staticClass: "row row-md m-b-2" }, [
+        return _c("div", { staticClass: "itemRelatorio row row-md m-b-2" }, [
           _c("div", { staticClass: "col-md-12" }, [
             _c("div", { staticClass: "box bg-white" }, [
               _c(
@@ -37559,7 +37582,7 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _vm._m(5, true)
+                    _vm._m(4, true)
                   ]),
                   _vm._v(" "),
                   _c(
@@ -37681,22 +37704,6 @@ var staticRenderFns = [
     return _c("div", { staticClass: "il-icon-left" }, [
       _c("i", { staticClass: "fa fa-angle-left" })
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "btn bg-twitter btn-block waves-effect waves-light",
-        attrs: { type: "button" }
-      },
-      [
-        _c("i", { staticClass: "ti-bar-chart pull-xs-right" }),
-        _vm._v(" Gráfico\n                    ")
-      ]
-    )
   },
   function() {
     var _vm = this
