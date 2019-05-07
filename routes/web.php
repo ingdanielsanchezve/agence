@@ -17,4 +17,6 @@ Route::get('/consultores', 'AgenceController@getConsultores');
 
 Route::post('/relatorio', 'AgenceController@getRelatorio');
 
-Route::post('/piedata', 'AgenceController@getPieChartData');
+Route::post('/piechartdata', 'AgenceController@getPieChartData');
+
+Route::post('/columchartdata', 'AgenceController@getColumnChartData');

@@ -2,21 +2,23 @@
     <div class="container-fluid">
         <div class="box box-block bg-white b-t-0 m-b-2">
             
-            <div class="text-muted m-b-1">Seleccione el período a Consultar</div>
+            <div class="text-muted m-b-1">Selecione o período para Consultar</div>
             <div class="form-group row">
-                <label for="from-date" class="col-xs-1 col-form-label">Desde</label>
-                <div class="col-xs-3">
+                <label for="from-date" class="col-xs-1 col-sm-1 col-form-label">De</label>
+                <div class="col-xs-11 col-sm-3">
                     <input v-model="fromDate" class="form-control" type="month" value="2017-01" min="2003-01" max="2007-12" id="from-date">
                 </div>
-                <label for="to-date" class="col-xs-1 col-form-label">Hasta</label>
-                <div class="col-xs-3">
+            </div>
+            <div class="form-group row">
+                <label for="to-date" class="col-xs-1 col-sm-1 col-form-label">a</label>
+                <div class="col-xs-11 col-sm-3">
                     <input v-model="toDate" class="form-control" type="month" value="2017-12" min="2003-01" max="2007-12" id="to-date">
                 </div>
             </div>	
             <div class="row m-b-1">
                 <div class="col-md-4">
                     <div class="card">
-                        <div class="card-header text-uppercase"><b>Listado de Consultores</b></div>
+                        <div class="card-header text-uppercase"><b>Lista de Consultores</b></div>
                         <div class="items-list items-container">
                             
                             <div class="il-item" v-for="(consultor, index) in consultores" @click="moveItemTo('selected', consultor, index)">
@@ -32,13 +34,13 @@
 
                         </div>
                         <div class="card-block">
-                            <button v-if="consultores.length > 0" type="button" @click="moveAllTo('selected')" class="btn btn-success btn-block">Seleccionar Todos</button>
+                            <button v-if="consultores.length > 0" type="button" @click="moveAllTo('selected')" class="btn btn-success btn-block">Seleccione Tudo</button>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card">
-                        <div class="card-header text-uppercase"><b>Consultores Seleccionados</b></div>
+                        <div class="card-header text-uppercase"><b>Consultores Selecionados</b></div>
                         <div class="items-list items-container">
                             
                             <div class="il-item-left" v-for="(consultor, index) in seleccionados" @click="moveItemTo('consultores', consultor, index)">
@@ -54,7 +56,7 @@
                             
                         </div>
                         <div class="card-block">
-                            <button v-if="seleccionados.length > 0" type="button" @click="moveAllTo('consultores')" class="btn btn-danger btn-block">Limpiar Todos</button>
+                            <button v-if="seleccionados.length > 0" type="button" @click="moveAllTo('consultores')" class="btn btn-danger btn-block">Limpar Tudo</button>
                         </div>
                     </div>
                 </div>
@@ -65,7 +67,7 @@
                             <i class="ti-menu pull-xs-right"></i> Relatorio
                         </button>
 
-                        <button v-bind:disabled="seleccionados.length == 0" type="button" class="btn bg-twitter btn-block waves-effect waves-light">
+                        <button @click="columnChart" v-bind:disabled="seleccionados.length == 0" type="button" class="btn bg-twitter btn-block waves-effect waves-light">
                             <i class="ti-bar-chart pull-xs-right"></i> Gráfico
                         </button>
 
@@ -76,9 +78,10 @@
 
                 </div>
             </div>
-            <div class="text-muted m-b-1">Haga click sobre el nombre del consultor para seleccionarlo</div>
+            <div class="text-muted m-b-1">Clique no nome do consultor para selecioná-lo</div>
 
         </div>
+        <div id="receitas">
         <div class="row row-md m-b-2" v-for="item in listado">
             <div class="col-md-12">
                 <div class="box bg-white">
@@ -117,8 +120,11 @@
                 </div>
             </div>
         </div>
-        <div id="chart" class="row row-md m-b-2">
         </div>
+        <div id="pieChart" class="row row-md m-b-2">
+        </div>
+        <div id="columnChart" class="row row-md m-b-2">
+        </div>        
     </div>
 </template>    
 <script>
@@ -175,6 +181,7 @@
                     }
                 },
                 listRelatorio: function(){
+                    $('#pieChart, #columnChart').css('visibility', 'hidden').css('height', 0)
                     ConsultoresAPI.getRelatorio(
                         {
                             fromDate: this.fromDate,
@@ -182,12 +189,14 @@
                             seleccionados: this.seleccionados
                         })
                         .then(listado =>{
+                            $('#receitas').css('visibility', 'visible').css('height', 'auto')
                             this.listado = listado
                         })
                         .catch(error => console.log(error))
-                },
+                },               
                 pieChart: function(){
-
+                    $('#pieChart').html("")
+                    $('#receita, #columnChart').css('visibility', 'hidden').css('height', 0)
                     ConsultoresAPI.getPieChartData(
                         {
                             fromDate: this.fromDate,
@@ -196,8 +205,80 @@
                         })
                         .then(chartData =>{
 
+                            $('#pieChart').css('visibility', 'visible').css('height', 400)
+                            chartData.title = 'Porcentaje de Receita por Consultor de '+moment(this.fromDate).format("MMMM Y")+' a '+moment(this.toDate).format("MMMM Y");
                             var chart = anychart.pie(chartData);
-                                chart.container('chart');
+
+                                chart.legend()
+                                        .enabled(true)
+                                        .fontSize(13)
+                                        .padding([0, 0, 20, 0]);
+
+                                chart.container('pieChart');
+
+                                chart.draw();
+
+                        })
+                        .catch(error => console.log(error))                    
+
+                },               
+                columnChart: function(){
+                    $('#columnChart').html("")
+                    $('#pieChart, #receitas').css('visibility', 'hidden').css('height', 0)
+                    ConsultoresAPI.getColumnChartData(
+                        {
+                            fromDate: this.fromDate,
+                            toDate: this.toDate,
+                            seleccionados: this.seleccionados
+                        })
+                        .then(data =>{
+
+                                $('#columnChart').css('visibility', 'visible').css('height', 400)
+                                var chartData = {
+                                    title: ' Receita por Consultor de '+moment(this.fromDate).format("MMMM Y")+' a '+moment(this.toDate).format("MMMM de Y"),
+                                    header: ['#', 'Florida', 'Texas'],
+                                    rows: [
+                                        ['Enero', 6814, 3054],
+                                        ['Febrero', 7012, 5067],
+                                        ['Marzo', 8814, 9054]
+                                    ]
+                                };
+
+                                var chart = anychart.column();
+
+                                chart.data(chartData);
+
+                                chart.animation(true);
+
+                                chart.yAxis().labels().format('${%Value}{groupsSeparator: }');
+
+                                chart.yAxis().title('Receita');
+
+                                chart.labels()
+                                        .enabled(true)
+                                        .position('center-top')
+                                        .anchor('center-bottom')
+                                        .format('${%Value}{groupsSeparator: }');
+                                chart.hovered().labels(false);
+
+                                chart.legend()
+                                        .enabled(true)
+                                        .fontSize(13)
+                                        .padding([0, 0, 20, 0]);
+
+                                chart.interactivity().hoverMode('single');
+
+                                chart.tooltip()
+                                        .positionMode('point')
+                                        .position('center-top')
+                                        .anchor('center-bottom')
+                                        .offsetX(0)
+                                        .offsetY(5)
+                                        .titleFormat('{%X}')
+                                        .format('{%SeriesName} : ${%Value}{groupsSeparator: }');
+
+                                chart.container('columnChart');
+
                                 chart.draw();
 
                         })

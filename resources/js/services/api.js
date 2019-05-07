@@ -16,7 +16,14 @@ export default {
     },
 
     getPieChartData(params){
-        return axios.post('/piedata', params)
+        return axios.post('/piechartdata', params)
+                    .then(function (response) {
+                        return response.data;
+                    })
+    },
+
+    getColumnChartData(params){
+        return axios.post('/columchartdata', params)
                     .then(function (response) {
                         return response.data;
                     })

@@ -1887,6 +1887,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'listConsultores',
@@ -1944,24 +1950,65 @@ __webpack_require__.r(__webpack_exports__);
     listRelatorio: function listRelatorio() {
       var _this2 = this;
 
+      $('#pieChart, #columnChart').css('visibility', 'hidden').css('height', 0);
       _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getRelatorio({
         fromDate: this.fromDate,
         toDate: this.toDate,
         seleccionados: this.seleccionados
       }).then(function (listado) {
+        $('#receitas').css('visibility', 'visible').css('height', 'auto');
         _this2.listado = listado;
       })["catch"](function (error) {
         return console.log(error);
       });
     },
     pieChart: function pieChart() {
+      var _this3 = this;
+
+      $('#pieChart').html("");
+      $('#receita, #columnChart').css('visibility', 'hidden').css('height', 0);
       _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getPieChartData({
         fromDate: this.fromDate,
         toDate: this.toDate,
         seleccionados: this.seleccionados
       }).then(function (chartData) {
+        $('#pieChart').css('visibility', 'visible').css('height', 400);
+        chartData.title = 'Porcentaje de Receita por Consultor de ' + moment(_this3.fromDate).format("MMMM Y") + ' a ' + moment(_this3.toDate).format("MMMM Y");
         var chart = anychart.pie(chartData);
-        chart.container('chart');
+        chart.legend().enabled(true).fontSize(13).padding([0, 0, 20, 0]);
+        chart.container('pieChart');
+        chart.draw();
+      })["catch"](function (error) {
+        return console.log(error);
+      });
+    },
+    columnChart: function columnChart() {
+      var _this4 = this;
+
+      $('#columnChart').html("");
+      $('#pieChart, #receitas').css('visibility', 'hidden').css('height', 0);
+      _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getColumnChartData({
+        fromDate: this.fromDate,
+        toDate: this.toDate,
+        seleccionados: this.seleccionados
+      }).then(function (data) {
+        $('#columnChart').css('visibility', 'visible').css('height', 400);
+        var chartData = {
+          title: ' Receita por Consultor de ' + moment(_this4.fromDate).format("MMMM Y") + ' a ' + moment(_this4.toDate).format("MMMM de Y"),
+          header: ['#', 'Florida', 'Texas'],
+          rows: [['Enero', 6814, 3054], ['Febrero', 7012, 5067], ['Marzo', 8814, 9054]]
+        };
+        var chart = anychart.column();
+        chart.data(chartData);
+        chart.animation(true);
+        chart.yAxis().labels().format('${%Value}{groupsSeparator: }');
+        chart.yAxis().title('Receita');
+        chart.labels().enabled(true).position('center-top').anchor('center-bottom').format('${%Value}{groupsSeparator: }');
+        chart.hovered().labels(false);
+        chart.legend().enabled(true).fontSize(13).padding([0, 0, 20, 0]);
+        chart.interactivity().hoverMode('single');
+        chart.tooltip().positionMode('point').position('center-top').anchor('center-bottom').offsetX(0).offsetY(5).titleFormat('{%X}').format('{%SeriesName} : ${%Value}{groupsSeparator: }');
+        chart.container('columnChart');
         chart.draw();
       })["catch"](function (error) {
         return console.log(error);
@@ -37292,270 +37339,266 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "container-fluid" },
-    [
-      _c("div", { staticClass: "box box-block bg-white b-t-0 m-b-2" }, [
-        _c("div", { staticClass: "text-muted m-b-1" }, [
-          _vm._v("Seleccione el período a Consultar")
-        ]),
+  return _c("div", { staticClass: "container-fluid" }, [
+    _c("div", { staticClass: "box box-block bg-white b-t-0 m-b-2" }, [
+      _c("div", { staticClass: "text-muted m-b-1" }, [
+        _vm._v("Selecione o período para Consultar")
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group row" }, [
+        _c(
+          "label",
+          {
+            staticClass: "col-xs-1 col-sm-1 col-form-label",
+            attrs: { for: "from-date" }
+          },
+          [_vm._v("De")]
+        ),
         _vm._v(" "),
-        _c("div", { staticClass: "form-group row" }, [
-          _c(
-            "label",
-            {
-              staticClass: "col-xs-1 col-form-label",
-              attrs: { for: "from-date" }
-            },
-            [_vm._v("Desde")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-xs-3" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.fromDate,
-                  expression: "fromDate"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                type: "month",
-                value: "2017-01",
-                min: "2003-01",
-                max: "2007-12",
-                id: "from-date"
-              },
-              domProps: { value: _vm.fromDate },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.fromDate = $event.target.value
-                }
+        _c("div", { staticClass: "col-xs-11 col-sm-3" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.fromDate,
+                expression: "fromDate"
               }
-            })
-          ]),
-          _vm._v(" "),
-          _c(
-            "label",
-            {
-              staticClass: "col-xs-1 col-form-label",
-              attrs: { for: "to-date" }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "month",
+              value: "2017-01",
+              min: "2003-01",
+              max: "2007-12",
+              id: "from-date"
             },
-            [_vm._v("Hasta")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-xs-3" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.toDate,
-                  expression: "toDate"
+            domProps: { value: _vm.fromDate },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
                 }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                type: "month",
-                value: "2017-12",
-                min: "2003-01",
-                max: "2007-12",
-                id: "to-date"
-              },
-              domProps: { value: _vm.toDate },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.toDate = $event.target.value
-                }
+                _vm.fromDate = $event.target.value
               }
-            })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "row m-b-1" }, [
-          _c("div", { staticClass: "col-md-4" }, [
-            _c("div", { staticClass: "card" }, [
-              _vm._m(0),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "items-list items-container" },
-                _vm._l(_vm.consultores, function(consultor, index) {
-                  return _c(
-                    "div",
-                    {
-                      staticClass: "il-item",
-                      on: {
-                        click: function($event) {
-                          return _vm.moveItemTo("selected", consultor, index)
-                        }
-                      }
-                    },
-                    [
-                      _c("a", { staticClass: "text-black" }, [
-                        _c("div", { staticClass: "media" }, [
-                          _c("div", { staticClass: "media-body" }, [
-                            _c("h6", { staticClass: "media-heading" }, [
-                              _vm._v(_vm._s(consultor.no_usuario))
-                            ])
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _vm._m(1, true)
-                      ])
-                    ]
-                  )
-                }),
-                0
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "card-block" }, [
-                _vm.consultores.length > 0
-                  ? _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-success btn-block",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            return _vm.moveAllTo("selected")
-                          }
-                        }
-                      },
-                      [_vm._v("Seleccionar Todos")]
-                    )
-                  : _vm._e()
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-4" }, [
-            _c("div", { staticClass: "card" }, [
-              _vm._m(2),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "items-list items-container" },
-                _vm._l(_vm.seleccionados, function(consultor, index) {
-                  return _c(
-                    "div",
-                    {
-                      staticClass: "il-item-left",
-                      on: {
-                        click: function($event) {
-                          return _vm.moveItemTo("consultores", consultor, index)
-                        }
-                      }
-                    },
-                    [
-                      _c("a", { staticClass: "text-black" }, [
-                        _vm._m(3, true),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "media" }, [
-                          _c("div", { staticClass: "media-body" }, [
-                            _c("h6", { staticClass: "media-heading" }, [
-                              _vm._v(_vm._s(consultor.no_usuario))
-                            ])
-                          ])
-                        ])
-                      ])
-                    ]
-                  )
-                }),
-                0
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "card-block" }, [
-                _vm.seleccionados.length > 0
-                  ? _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-danger btn-block",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            return _vm.moveAllTo("consultores")
-                          }
-                        }
-                      },
-                      [_vm._v("Limpiar Todos")]
-                    )
-                  : _vm._e()
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "col-md-3 col-md-offset-1 m-b-2 m-md-b-0" },
-            [
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "btn bg-facebook btn-block waves-effect waves-light",
-                  attrs: {
-                    disabled: _vm.seleccionados.length == 0,
-                    type: "button"
-                  },
-                  on: { click: _vm.listRelatorio }
-                },
-                [
-                  _c("i", { staticClass: "ti-menu pull-xs-right" }),
-                  _vm._v(" Relatorio\n                    ")
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "btn bg-twitter btn-block waves-effect waves-light",
-                  attrs: {
-                    disabled: _vm.seleccionados.length == 0,
-                    type: "button"
-                  }
-                },
-                [
-                  _c("i", { staticClass: "ti-bar-chart pull-xs-right" }),
-                  _vm._v(" Gráfico\n                    ")
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "btn bg-linkedin btn-block waves-effect waves-light",
-                  attrs: {
-                    disabled: _vm.seleccionados.length == 0,
-                    type: "button"
-                  },
-                  on: { click: _vm.pieChart }
-                },
-                [
-                  _c("i", { staticClass: "ti-pie-chart pull-xs-right" }),
-                  _vm._v(" Pizza\n                    ")
-                ]
-              )
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "text-muted m-b-1" }, [
-          _vm._v("Haga click sobre el nombre del consultor para seleccionarlo")
+            }
+          })
         ])
       ]),
       _vm._v(" "),
+      _c("div", { staticClass: "form-group row" }, [
+        _c(
+          "label",
+          {
+            staticClass: "col-xs-1 col-sm-1 col-form-label",
+            attrs: { for: "to-date" }
+          },
+          [_vm._v("a")]
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-xs-11 col-sm-3" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.toDate,
+                expression: "toDate"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "month",
+              value: "2017-12",
+              min: "2003-01",
+              max: "2007-12",
+              id: "to-date"
+            },
+            domProps: { value: _vm.toDate },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.toDate = $event.target.value
+              }
+            }
+          })
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row m-b-1" }, [
+        _c("div", { staticClass: "col-md-4" }, [
+          _c("div", { staticClass: "card" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "items-list items-container" },
+              _vm._l(_vm.consultores, function(consultor, index) {
+                return _c(
+                  "div",
+                  {
+                    staticClass: "il-item",
+                    on: {
+                      click: function($event) {
+                        return _vm.moveItemTo("selected", consultor, index)
+                      }
+                    }
+                  },
+                  [
+                    _c("a", { staticClass: "text-black" }, [
+                      _c("div", { staticClass: "media" }, [
+                        _c("div", { staticClass: "media-body" }, [
+                          _c("h6", { staticClass: "media-heading" }, [
+                            _vm._v(_vm._s(consultor.no_usuario))
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _vm._m(1, true)
+                    ])
+                  ]
+                )
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-block" }, [
+              _vm.consultores.length > 0
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-success btn-block",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.moveAllTo("selected")
+                        }
+                      }
+                    },
+                    [_vm._v("Seleccione Tudo")]
+                  )
+                : _vm._e()
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-4" }, [
+          _c("div", { staticClass: "card" }, [
+            _vm._m(2),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "items-list items-container" },
+              _vm._l(_vm.seleccionados, function(consultor, index) {
+                return _c(
+                  "div",
+                  {
+                    staticClass: "il-item-left",
+                    on: {
+                      click: function($event) {
+                        return _vm.moveItemTo("consultores", consultor, index)
+                      }
+                    }
+                  },
+                  [
+                    _c("a", { staticClass: "text-black" }, [
+                      _vm._m(3, true),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "media" }, [
+                        _c("div", { staticClass: "media-body" }, [
+                          _c("h6", { staticClass: "media-heading" }, [
+                            _vm._v(_vm._s(consultor.no_usuario))
+                          ])
+                        ])
+                      ])
+                    ])
+                  ]
+                )
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-block" }, [
+              _vm.seleccionados.length > 0
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger btn-block",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.moveAllTo("consultores")
+                        }
+                      }
+                    },
+                    [_vm._v("Limpar Tudo")]
+                  )
+                : _vm._e()
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-3 col-md-offset-1 m-b-2 m-md-b-0" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn bg-facebook btn-block waves-effect waves-light",
+              attrs: {
+                disabled: _vm.seleccionados.length == 0,
+                type: "button"
+              },
+              on: { click: _vm.listRelatorio }
+            },
+            [
+              _c("i", { staticClass: "ti-menu pull-xs-right" }),
+              _vm._v(" Relatorio\n                    ")
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn bg-twitter btn-block waves-effect waves-light",
+              attrs: {
+                disabled: _vm.seleccionados.length == 0,
+                type: "button"
+              },
+              on: { click: _vm.columnChart }
+            },
+            [
+              _c("i", { staticClass: "ti-bar-chart pull-xs-right" }),
+              _vm._v(" Gráfico\n                    ")
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn bg-linkedin btn-block waves-effect waves-light",
+              attrs: {
+                disabled: _vm.seleccionados.length == 0,
+                type: "button"
+              },
+              on: { click: _vm.pieChart }
+            },
+            [
+              _c("i", { staticClass: "ti-pie-chart pull-xs-right" }),
+              _vm._v(" Pizza\n                    ")
+            ]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "text-muted m-b-1" }, [
+        _vm._v("Clique no nome do consultor para selecioná-lo")
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { attrs: { id: "receitas" } },
       _vm._l(_vm.listado, function(item) {
         return _c("div", { staticClass: "row row-md m-b-2" }, [
           _c("div", { staticClass: "col-md-12" }, [
@@ -37657,11 +37700,13 @@ var render = function() {
           ])
         ])
       }),
-      _vm._v(" "),
-      _c("div", { staticClass: "row row-md m-b-2", attrs: { id: "chart" } })
-    ],
-    2
-  )
+      0
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "row row-md m-b-2", attrs: { id: "pieChart" } }),
+    _vm._v(" "),
+    _c("div", { staticClass: "row row-md m-b-2", attrs: { id: "columnChart" } })
+  ])
 }
 var staticRenderFns = [
   function() {
@@ -37669,7 +37714,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header text-uppercase" }, [
-      _c("b", [_vm._v("Listado de Consultores")])
+      _c("b", [_vm._v("Lista de Consultores")])
     ])
   },
   function() {
@@ -37685,7 +37730,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header text-uppercase" }, [
-      _c("b", [_vm._v("Consultores Seleccionados")])
+      _c("b", [_vm._v("Consultores Selecionados")])
     ])
   },
   function() {
@@ -50038,7 +50083,12 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   getPieChartData: function getPieChartData(params) {
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/piedata', params).then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/piechartdata', params).then(function (response) {
+      return response.data;
+    });
+  },
+  getColumnChartData: function getColumnChartData(params) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/columchartdata', params).then(function (response) {
       return response.data;
     });
   }

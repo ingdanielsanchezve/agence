@@ -90,8 +90,45 @@ class AgenceController extends Controller
 
         return json_encode($resp);
 
+    }
+
+    function getColumnChartData(Request $request){
+
+        $fromDate = explode("-", $request->input('fromDate'));
+        $toDate = explode("-", $request->input('toDate'));
+        $colors= ["#a0d6f6", "#c6d8f6", "#90b2ec", "#4e7ccc", "#3b3da0", "#2c0437"];
+        $header = ['#'];
+        $data = [];
+        $i = 0;
+
+        $users = DB::table('relatorio')
+                    ->select('co_usuario', 'no_usuario')
+                    ->distinct()
+                    ->whereIn('co_usuario', array_column($request->input('seleccionados'), 'co_usuario'))
+                    ->whereBetween('ano', [$fromDate[0], $toDate[0]])
+                    ->whereBetween('mes', [$fromDate[1], $toDate[1]])
+                    ->get();
+
+        foreach($users as $user){
+          
+           $header[] = $user->no_usuario;
+
+           $query = DB::table('relatorio')
+                        ->select('mes_name', 'ano', 'receita')
+                        ->where('co_usuario', $user->co_usuario)
+                        ->whereBetween('ano', [$fromDate[0], $toDate[0]])
+                        ->whereBetween('mes', [$fromDate[1], $toDate[1]])
+                        ->get();
+            
+            $data[] = $query;
+        }
+
+        return json_encode(
+            ['header'  => $header, 'data' => $data]
+        );
 
     }
 
-
 }
+
+    
