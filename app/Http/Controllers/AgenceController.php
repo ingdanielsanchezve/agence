@@ -96,10 +96,8 @@ class AgenceController extends Controller
 
         $fromDate = explode("-", $request->input('fromDate'));
         $toDate = explode("-", $request->input('toDate'));
-        $colors= ["#a0d6f6", "#c6d8f6", "#90b2ec", "#4e7ccc", "#3b3da0", "#2c0437"];
         $header = ['#'];
-        $data = [];
-        $i = 0;
+        $data = $cost = [];
 
         $users = DB::table('relatorio')
                     ->select('co_usuario', 'no_usuario')
@@ -119,16 +117,38 @@ class AgenceController extends Controller
                         ->whereBetween('ano', [$fromDate[0], $toDate[0]])
                         ->whereBetween('mes', [$fromDate[1], $toDate[1]])
                         ->get();
+
+            if(!isset($data[0])){
             
-            for($i=0; $i < count($query); $i++){
+                for($i=0; $i < count($query); $i++){
 
-                if(isset($data[$i])){
+                    if(isset($data[$i])){
 
-                    $data[$i][] = $query[$i]->receita;
+                        $data[$i][] = $query[$i]->receita;
 
-                }else{
+                    }else{
 
-                    $data[$i] = [$query[$i]->mes_name.' '.$query[$i]->ano, $query[$i]->receita];
+                        $data[$i] = [$query[$i]->mes_name.' '.$query[$i]->ano, $query[$i]->receita];
+
+                    }
+
+                }
+
+            }else{
+
+                $j = 0;
+                for($i=0; $i < count($data); $i++){
+
+                    if($data[$i][0] == $query[$j]->mes_name.' '.$query[$j]->ano){
+
+                        $data[$i][] = $query[$j]->receita;
+                        $j++;
+
+                    }else{
+
+                        $data[$i][] = 0;
+                        
+                    }
 
                 }
 
@@ -136,7 +156,6 @@ class AgenceController extends Controller
 
         }
 
-        $custo = [];
         $query = DB::table('relatorio')
                         ->select(DB::RAW("mes_name, ano, SUM(custo_fixo)/COUNT(co_usuario) custo_prom"))
                         ->whereIn('co_usuario', array_column($request->input('seleccionados'), 'co_usuario'))
@@ -147,12 +166,12 @@ class AgenceController extends Controller
 
         foreach($query as $val){
 
-            $custo[] = [$val->mes_name.' '.$val->ano, $val->custo_prom];
+            $cost[] = [$val->mes_name.' '.$val->ano, $val->custo_prom];
 
         }
 
         return json_encode(
-            ['header'  => $header, 'data' => $data, 'cost' => $custo]
+            ['header'  => $header, 'data' => $data, 'cost' => $cost]
         );
 
     }
