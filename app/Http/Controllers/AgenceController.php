@@ -23,7 +23,9 @@ class AgenceController extends Controller
                     })
                     ->get();
 
-        return $user->toJson();
+        return json_encode(
+            ['consultores' => $user->toArray()]
+        );
             
     }
 
@@ -139,7 +141,7 @@ class AgenceController extends Controller
                 $j = 0;
                 for($i=0; $i < count($data); $i++){
 
-                    if($data[$i][0] == $query[$j]->mes_name.' '.$query[$j]->ano){
+                    if(isset($query[$j]) && $data[$i][0] == $query[$j]->mes_name.' '.$query[$j]->ano){
 
                         $data[$i][] = $query[$j]->receita;
                         $j++;

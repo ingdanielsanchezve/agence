@@ -17,9 +17,7 @@
 		<link rel="stylesheet" href="{{ asset('vendor/animate.css/animate.min.css') }}">
 		<link rel="stylesheet" href="{{ asset('vendor/jscrollpane/jquery.jscrollpane.css') }}">
 		<link rel="stylesheet" href="{{ asset('vendor/waves/waves.min.css') }}">
-		<link rel="stylesheet" href="{{ asset('vendor/chartist/chartist.min.css') }}">
-		<link rel="stylesheet" href="{{ asset('vendor/switchery/dist/switchery.min.css') }}">
-		<link rel="stylesheet" href="{{ asset('vendor/morris/morris.css') }}">
+		<link rel="stylesheet" href="{{ asset('vendor/sweetalert2/sweetalert2.min.css') }}">
 		<link rel="stylesheet" href="{{ asset('vendor/jvectormap/jquery-jvectormap-2.0.3.css') }}">
 
 		<!-- Neptune CSS -->

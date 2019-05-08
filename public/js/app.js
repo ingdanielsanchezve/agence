@@ -1893,6 +1893,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'listConsultores',
@@ -1902,14 +1914,27 @@ __webpack_require__.r(__webpack_exports__);
       toDate: '2007-01',
       consultores: [],
       seleccionados: [],
-      listado: []
+      listado: [],
+      no_records: false,
+      error_dates: false
     };
   },
   created: function created() {
     var _this = this;
 
-    _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getConsultores().then(function (consultores) {
-      _this.consultores = consultores;
+    _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getConsultores().then(function (resp) {
+      if ('consultores' in resp) {
+        _this.consultores = resp.consultores;
+      } else {
+        swal({
+          title: 'Ocorreu um erro',
+          text: 'Por favor atualize o navegador?',
+          type: 'error',
+          showCloseButton: false,
+          confirmButtonClass: 'btn btn-primary btn-lg',
+          buttonsStyling: false
+        });
+      }
     })["catch"](function (error) {
       return console.log(error);
     });
@@ -1937,6 +1962,7 @@ __webpack_require__.r(__webpack_exports__);
 
         this.seleccionados = [];
         this.listado = [];
+        this.no_records = false;
         $('#pieChart').html("");
         $('#columnChart').html("");
       }
@@ -1954,70 +1980,106 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       $('#pieChart, #columnChart').css('display', 'none').css('height', 0);
-      _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getRelatorio({
-        fromDate: this.fromDate,
-        toDate: this.toDate,
-        seleccionados: this.seleccionados
-      }).then(function (listado) {
-        $('#receitas').css('display', 'block').css('height', 'auto');
-        _this2.listado = listado;
-      })["catch"](function (error) {
-        return console.log(error);
-      });
+
+      if (this.fromDate > this.toDate) {
+        this.error_dates = true;
+        return 0;
+      } else {
+        _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getRelatorio({
+          fromDate: this.fromDate,
+          toDate: this.toDate,
+          seleccionados: this.seleccionados
+        }).then(function (listado) {
+          if (listado.length > 0) {
+            $('#receitas').css('display', 'block').css('height', 'auto');
+            _this2.no_records = false;
+            _this2.listado = listado;
+            _this2.error_dates = false;
+          } else {
+            _this2.no_records = true;
+          }
+        })["catch"](function (error) {
+          return console.log(error);
+        });
+      }
     },
     pieChart: function pieChart() {
       var _this3 = this;
 
       $('#pieChart').html("");
       $('#receitas, #columnChart').css('display', 'none').css('height', 0);
-      _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getPieChartData({
-        fromDate: this.fromDate,
-        toDate: this.toDate,
-        seleccionados: this.seleccionados
-      }).then(function (chartData) {
-        $('#pieChart').css('display', 'block').css('height', 400);
-        chartData.title = 'Porcentaje de Receita por Consultor de ' + moment(_this3.fromDate).format("MMMM Y") + ' a ' + moment(_this3.toDate).format("MMMM Y");
-        var chart = anychart.pie(chartData);
-        chart.legend().enabled(true).fontSize(13).padding([0, 0, 20, 0]);
-        chart.container('pieChart');
-        chart.draw();
-      })["catch"](function (error) {
-        return console.log(error);
-      });
+
+      if (this.fromDate > this.toDate) {
+        this.error_dates = true;
+        return 0;
+      } else {
+        _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getPieChartData({
+          fromDate: this.fromDate,
+          toDate: this.toDate,
+          seleccionados: this.seleccionados
+        }).then(function (chartData) {
+          if (chartData.length > 0) {
+            $('#pieChart').css('display', 'block').css('height', 400);
+            _this3.no_records = false;
+            _this3.error_dates = false;
+            chartData.title = 'Porcentaje de Receita por Consultor de ' + moment(_this3.fromDate).format("MMMM Y") + ' a ' + moment(_this3.toDate).format("MMMM Y");
+            var chart = anychart.pie(chartData);
+            chart.legend().enabled(true).fontSize(13).padding([0, 0, 20, 0]);
+            chart.container('pieChart');
+            chart.draw();
+          } else {
+            _this3.no_records = true;
+          }
+        })["catch"](function (error) {
+          return console.log(error);
+        });
+      }
     },
     columnChart: function columnChart() {
       var _this4 = this;
 
       $('#columnChart').html("");
       $('#pieChart, #receitas').css('display', 'none').css('height', 0);
-      _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getColumnChartData({
-        fromDate: this.fromDate,
-        toDate: this.toDate,
-        seleccionados: this.seleccionados
-      }).then(function (resp) {
-        $('#columnChart').css('display', 'block').css('height', 400);
-        var chartData = {
-          title: ' Receita por Consultor de ' + moment(_this4.fromDate).format("MMMM Y") + ' a ' + moment(_this4.toDate).format("MMMM Y"),
-          header: resp.header,
-          rows: resp.data
-        };
-        var chart = anychart.column();
-        chart.data(chartData);
-        chart.animation(true);
-        chart.yAxis().labels().format('R$ {%Value}{groupsSeparator: }');
-        chart.yAxis().title('Receita');
-        chart.labels().enabled(true).position('center-top').anchor('center-bottom').fontSize(10).format('R$ {%Value}{groupsSeparator: }');
-        chart.hovered().labels(false);
-        chart.legend().enabled(true).fontSize(13).padding([0, 0, 20, 0]);
-        chart.interactivity().hoverMode('single');
-        chart.tooltip().positionMode('point').position('center-top').anchor('center-bottom').offsetX(0).offsetY(5).titleFormat('{%X}').displayMode('union').format('{%SeriesName} : R$ {%Value}{groupsSeparator: }');
-        var lineSeries = chart.line(resp.cost);
-        lineSeries.name('Custo Fixo Medio').stroke('5 #1e8e3e');
-        chart.container('columnChart');
-        chart.draw();
-      })["catch"](function (error) {
-        return console.log(error);
-      });
+
+      if (this.fromDate > this.toDate) {
+        this.error_dates = true;
+        return 0;
+      } else {
+        _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getColumnChartData({
+          fromDate: this.fromDate,
+          toDate: this.toDate,
+          seleccionados: this.seleccionados
+        }).then(function (resp) {
+          if ('data' in resp && resp.data.length > 0) {
+            $('#columnChart').css('display', 'block').css('height', 400);
+            _this4.no_records = false;
+            _this4.error_dates = false;
+            var chartData = {
+              title: ' Receita por Consultor de ' + moment(_this4.fromDate).format("MMMM Y") + ' a ' + moment(_this4.toDate).format("MMMM Y"),
+              header: resp.header,
+              rows: resp.data
+            };
+            var chart = anychart.column();
+            chart.data(chartData);
+            chart.animation(true);
+            chart.yAxis().labels().format('R$ {%Value}{groupsSeparator: }');
+            chart.yAxis().title('Receita');
+            chart.labels().enabled(true).position('center-top').anchor('center-bottom').fontSize(10).format('R$ {%Value}{groupsSeparator: }');
+            chart.hovered().labels(false);
+            chart.legend().enabled(true).fontSize(13).padding([0, 0, 20, 0]);
+            chart.interactivity().hoverMode('single');
+            chart.tooltip().positionMode('point').position('center-top').anchor('center-bottom').offsetX(0).offsetY(5).titleFormat('{%X}').displayMode('union').format('{%SeriesName} : R$ {%Value}{groupsSeparator: }');
+            var lineSeries = chart.line(resp.cost);
+            lineSeries.name('Custo Fixo Medio').stroke('5 #1e8e3e');
+            chart.container('columnChart');
+            chart.draw();
+          } else {
+            _this4.no_records = true;
+          }
+        })["catch"](function (error) {
+          return console.log(error);
+        });
+      }
     }
   },
   filters: {
@@ -37710,7 +37772,44 @@ var render = function() {
     _vm._v(" "),
     _c("div", { staticClass: "row row-md m-b-2", attrs: { id: "pieChart" } }),
     _vm._v(" "),
-    _c("div", { staticClass: "row row-md m-b-2", attrs: { id: "columnChart" } })
+    _c("div", {
+      staticClass: "row row-md m-b-2",
+      attrs: { id: "columnChart" }
+    }),
+    _vm._v(" "),
+    _vm.no_records
+      ? _c(
+          "div",
+          {
+            staticClass: "alert alert-warning alert-dismissible fade in",
+            attrs: { role: "alert" }
+          },
+          [
+            _vm._m(5),
+            _vm._v(" "),
+            _c("strong", [_vm._v("Aviso!")]),
+            _vm._v(
+              " O consultor não possui registros no período selecionado.\n    "
+            )
+          ]
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.error_dates
+      ? _c(
+          "div",
+          {
+            staticClass: "alert alert-danger alert-dismissible fade in",
+            attrs: { role: "alert" }
+          },
+          [
+            _vm._m(6),
+            _vm._v(" "),
+            _c("strong", [_vm._v("Error!")]),
+            _vm._v(" erro nas datas selecionadas.\n    ")
+          ]
+        )
+      : _vm._e()
   ])
 }
 var staticRenderFns = [
@@ -37761,6 +37860,40 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("th", { staticClass: "small" }, [_vm._v("Lucro")])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "alert",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "alert",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   }
 ]
 render._withStripped = true

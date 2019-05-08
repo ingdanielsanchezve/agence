@@ -82,49 +82,61 @@
 
         </div>
         <div id="receitas">
-        <div class="row row-md m-b-2" v-for="item in listado">
-            <div class="col-md-12">
-                <div class="box bg-white">
-                    <table class="table table-grey-head table-hover m-md-b-0">
-                        <thead>
-                            <tr>
-                                <th colspan="5">{{item.name}}</th>
-                            </tr>
-                            <tr>
-                                <th class="small">Período</th>
-                                <th class="small">Receita Líquida</th>
-                                <th class="small">Custo Fixo</th>
-                                <th class="small">Comissão</th>
-                                <th class="small">Lucro</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="data in item.receita">
-                                <td class="small">{{data.mes_name}} de {{data.ano}}</td>
-                                <td class="small">{{data.receita | currency}}</td>
-                                <td class="small">{{data.custo_fixo | currency}}</td>
-                                <td class="small">{{data.commisao | currency}}</td>
-                                <th class="small" v-bind:class="{ 'text-primary': (data.lucro > 0), 'text-danger': (data.lucro <= 0) }">{{data.lucro | currency}}</th>
-                            </tr>                                
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th class="small">Saldo</th>
-                                <th class="small">{{item.totals.tot_receita | currency}}</th>
-                                <th class="small">{{item.totals.tot_custo_fixo | currency}}</th>
-                                <th class="small">{{item.totals.tot_commisao | currency}}</th>
-                                <th class="small" v-bind:class="{ 'text-primary': (item.totals.tot_lucro > 0), 'text-danger': (item.totals.tot_lucro <= 0) }">{{item.totals.tot_lucro | currency}}</th>
-                            </tr>
-                        </tfoot>
-                    </table>
+            <div class="row row-md m-b-2" v-for="item in listado">
+                <div class="col-md-12">
+                    <div class="box bg-white">
+                        <table class="table table-grey-head table-hover m-md-b-0">
+                            <thead>
+                                <tr>
+                                    <th colspan="5">{{item.name}}</th>
+                                </tr>
+                                <tr>
+                                    <th class="small">Período</th>
+                                    <th class="small">Receita Líquida</th>
+                                    <th class="small">Custo Fixo</th>
+                                    <th class="small">Comissão</th>
+                                    <th class="small">Lucro</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="data in item.receita">
+                                    <td class="small">{{data.mes_name}} de {{data.ano}}</td>
+                                    <td class="small">{{data.receita | currency}}</td>
+                                    <td class="small">{{data.custo_fixo | currency}}</td>
+                                    <td class="small">{{data.commisao | currency}}</td>
+                                    <th class="small" v-bind:class="{ 'text-primary': (data.lucro > 0), 'text-danger': (data.lucro <= 0) }">{{data.lucro | currency}}</th>
+                                </tr>                                
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th class="small">Saldo</th>
+                                    <th class="small">{{item.totals.tot_receita | currency}}</th>
+                                    <th class="small">{{item.totals.tot_custo_fixo | currency}}</th>
+                                    <th class="small">{{item.totals.tot_commisao | currency}}</th>
+                                    <th class="small" v-bind:class="{ 'text-primary': (item.totals.tot_lucro > 0), 'text-danger': (item.totals.tot_lucro <= 0) }">{{item.totals.tot_lucro | currency}}</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
         <div id="pieChart" class="row row-md m-b-2">
         </div>
         <div id="columnChart" class="row row-md m-b-2">
-        </div>        
+        </div>
+        <div v-if="no_records" class="alert alert-warning alert-dismissible fade in" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+            <strong>Aviso!</strong> O consultor não possui registros no período selecionado.
+        </div>
+        <div v-if="error_dates" class="alert alert-danger alert-dismissible fade in" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+            <strong>Error!</strong> erro nas datas selecionadas.
+        </div>
     </div>
 </template>    
 <script>
@@ -139,13 +151,27 @@
                     toDate:'2007-01',
                     consultores: [],
                     seleccionados: [],
-                    listado: []
+                    listado: [],
+                    no_records: false,
+                    error_dates: false
                 }
             },
             created: function(){
                 ConsultoresAPI.getConsultores()
-                              .then(consultores =>{
-                                  this.consultores = consultores
+                              .then(resp =>{
+
+                                  if('consultores' in resp){
+                                      this.consultores = resp.consultores
+                                  }else{
+                                      swal({
+                                        title: 'Ocorreu um erro',
+                                        text: 'Por favor atualize o navegador?',
+                                        type: 'error',
+                                        showCloseButton: false,
+                                        confirmButtonClass: 'btn btn-primary btn-lg',
+                                        buttonsStyling: false
+                                      });
+                                  }
                               })
                               .catch(error => console.log(error))
             },
@@ -170,6 +196,7 @@
                         }
                         this.seleccionados = [];
                         this.listado = [];
+                        this.no_records = false;
                         $('#pieChart').html("");
                         $('#columnChart').html("");
                     }
@@ -185,110 +212,148 @@
                 },
                 listRelatorio: function(){
                     $('#pieChart, #columnChart').css('display', 'none').css('height', 0)
-                    ConsultoresAPI.getRelatorio(
-                        {
-                            fromDate: this.fromDate,
-                            toDate: this.toDate,
-                            seleccionados: this.seleccionados
-                        })
-                        .then(listado =>{
-                            $('#receitas').css('display', 'block').css('height', 'auto')
-                            this.listado = listado
-                        })
-                        .catch(error => console.log(error))
+                    if(this.fromDate > this.toDate){
+                        this.error_dates = true;
+                        return 0;
+                    }else{
+                        ConsultoresAPI.getRelatorio(
+                            {
+                                fromDate: this.fromDate,
+                                toDate: this.toDate,
+                                seleccionados: this.seleccionados
+                            })
+                            .then(listado =>{
+                                if(listado.length > 0){
+                                    $('#receitas').css('display', 'block').css('height', 'auto')
+                                    this.no_records = false;
+                                    this.listado = listado
+                                    this.error_dates = false;
+                                }else{
+                                    this.no_records = true;
+                                }
+                            })
+                            .catch(error => console.log(error))
+                    }
                 },               
                 pieChart: function(){
                     $('#pieChart').html("")
                     $('#receitas, #columnChart').css('display', 'none').css('height', 0)
-                    ConsultoresAPI.getPieChartData(
-                        {
-                            fromDate: this.fromDate,
-                            toDate: this.toDate,
-                            seleccionados: this.seleccionados
-                        })
-                        .then(chartData =>{
+                    if(this.fromDate > this.toDate){
+                        this.error_dates = true;
+                        return 0;
+                    }else{
+                        ConsultoresAPI.getPieChartData(
+                            {
+                                fromDate: this.fromDate,
+                                toDate: this.toDate,
+                                seleccionados: this.seleccionados
+                            })
+                            .then(chartData =>{
 
-                            $('#pieChart').css('display', 'block').css('height', 400)
-                            chartData.title = 'Porcentaje de Receita por Consultor de '+moment(this.fromDate).format("MMMM Y")+' a '+moment(this.toDate).format("MMMM Y");
-                            var chart = anychart.pie(chartData);
+                                if(chartData.length > 0){
+                                    $('#pieChart').css('display', 'block').css('height', 400)
+                                    this.no_records = false;
+                                    this.error_dates = false;
 
-                                chart.legend()
-                                        .enabled(true)
-                                        .fontSize(13)
-                                        .padding([0, 0, 20, 0]);
+                                    chartData.title = 'Porcentaje de Receita por Consultor de '+moment(this.fromDate).format("MMMM Y")+' a '+moment(this.toDate).format("MMMM Y");
+                                    var chart = anychart.pie(chartData);
 
-                                chart.container('pieChart');
+                                        chart.legend()
+                                                .enabled(true)
+                                                .fontSize(13)
+                                                .padding([0, 0, 20, 0]);
 
-                                chart.draw();
+                                        chart.container('pieChart');
 
-                        })
-                        .catch(error => console.log(error))                    
+                                        chart.draw();
+                                }else{
+                                    this.no_records = true;
+                                }
+
+                            })
+                            .catch(error => console.log(error))
+                    }
 
                 },               
                 columnChart: function(){
                     $('#columnChart').html("")
                     $('#pieChart, #receitas').css('display', 'none').css('height', 0)
+                    if(this.fromDate > this.toDate){
+                        this.error_dates = true;
+                        return 0;
+                    }else{
 
-                    ConsultoresAPI.getColumnChartData(
-                        {
-                            fromDate: this.fromDate,
-                            toDate: this.toDate,
-                            seleccionados: this.seleccionados
-                        })
-                        .then(resp =>{
+                        ConsultoresAPI.getColumnChartData(
+                            {
+                                fromDate: this.fromDate,
+                                toDate: this.toDate,
+                                seleccionados: this.seleccionados
+                            })
+                            .then(resp =>{
 
-                                $('#columnChart').css('display', 'block').css('height', 400)
-                                var chartData = {
-                                    title: ' Receita por Consultor de '+moment(this.fromDate).format("MMMM Y")+' a '+moment(this.toDate).format("MMMM Y"),
-                                    header: resp.header,
-                                    rows: resp.data
-                                };
+                                if('data' in resp && resp.data.length > 0){
 
-                                var chart = anychart.column();
+                                    $('#columnChart').css('display', 'block').css('height', 400)
+                                    this.no_records = false;
+                                    this.error_dates = false;
+                                    
+                                    var chartData = {
+                                        title: ' Receita por Consultor de '+moment(this.fromDate).format("MMMM Y")+' a '+moment(this.toDate).format("MMMM Y"),
+                                        header: resp.header,
+                                        rows: resp.data
+                                    };
 
-                                chart.data(chartData);
+                                    var chart = anychart.column();
 
-                                chart.animation(true);
+                                    chart.data(chartData);
 
-                                chart.yAxis().labels().format('R$ {%Value}{groupsSeparator: }');
+                                    chart.animation(true);
 
-                                chart.yAxis().title('Receita');
+                                    chart.yAxis().labels().format('R$ {%Value}{groupsSeparator: }');
 
-                                chart.labels()
-                                     .enabled(true)
-                                     .position('center-top')
-                                     .anchor('center-bottom')
-                                     .fontSize(10)
-                                     .format('R$ {%Value}{groupsSeparator: }');
-                                chart.hovered().labels(false);
+                                    chart.yAxis().title('Receita');
 
-                                chart.legend()
-                                     .enabled(true)
-                                     .fontSize(13)
-                                     .padding([0, 0, 20, 0]);
+                                    chart.labels()
+                                        .enabled(true)
+                                        .position('center-top')
+                                        .anchor('center-bottom')
+                                        .fontSize(10)
+                                        .format('R$ {%Value}{groupsSeparator: }');
+                                    chart.hovered().labels(false);
 
-                                chart.interactivity().hoverMode('single');
+                                    chart.legend()
+                                        .enabled(true)
+                                        .fontSize(13)
+                                        .padding([0, 0, 20, 0]);
 
-                                chart.tooltip()
-                                     .positionMode('point')
-                                     .position('center-top')
-                                     .anchor('center-bottom')
-                                     .offsetX(0)
-                                     .offsetY(5)
-                                     .titleFormat('{%X}')
-                                     .displayMode('union')
-                                     .format('{%SeriesName} : R$ {%Value}{groupsSeparator: }');
+                                    chart.interactivity().hoverMode('single');
 
-                                var lineSeries = chart.line(resp.cost);
-                                    lineSeries.name('Custo Fixo Medio')
-                                              .stroke('5 #1e8e3e');
+                                    chart.tooltip()
+                                        .positionMode('point')
+                                        .position('center-top')
+                                        .anchor('center-bottom')
+                                        .offsetX(0)
+                                        .offsetY(5)
+                                        .titleFormat('{%X}')
+                                        .displayMode('union')
+                                        .format('{%SeriesName} : R$ {%Value}{groupsSeparator: }');
 
-                                chart.container('columnChart');
+                                    var lineSeries = chart.line(resp.cost);
+                                        lineSeries.name('Custo Fixo Medio')
+                                                .stroke('5 #1e8e3e');
 
-                                chart.draw();
+                                    chart.container('columnChart');
 
-                        })
-                        .catch(error => console.log(error))                    
+                                    chart.draw();
+                                
+                                }else{
+                                    this.no_records = true;
+                                }
+
+                            })
+                            .catch(error => console.log(error))
+                    
+                    }
 
                 }
             },
