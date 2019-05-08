@@ -19,4 +19,4 @@ Route::post('/relatorio', 'AgenceController@getRelatorio');
 
 Route::post('/piechartdata', 'AgenceController@getPieChartData');
 
-Route::post('/columchartdata', 'AgenceController@getColumnChartData');
+Route::post('/columnchartdata', 'AgenceController@getColumnChartData');
