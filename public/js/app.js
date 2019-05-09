@@ -1963,6 +1963,7 @@ __webpack_require__.r(__webpack_exports__);
         this.seleccionados = [];
         this.listado = [];
         this.no_records = false;
+        this.error_dates = false;
         $('#pieChart').html("");
         $('#columnChart').html("");
       }
@@ -1983,6 +1984,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.fromDate > this.toDate) {
         this.error_dates = true;
+        this.no_records = false;
         return 0;
       } else {
         _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getRelatorio({
@@ -2011,6 +2013,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.fromDate > this.toDate) {
         this.error_dates = true;
+        this.no_records = false;
         return 0;
       } else {
         _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getPieChartData({
@@ -2043,6 +2046,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.fromDate > this.toDate) {
         this.error_dates = true;
+        this.no_records = false;
         return 0;
       } else {
         _services_api__WEBPACK_IMPORTED_MODULE_0__["default"].getColumnChartData({
@@ -37423,7 +37427,7 @@ var render = function() {
             [_vm._v("De")]
           ),
           _vm._v(" "),
-          _c("div", { staticClass: "col-xs-11 col-sm-3" }, [
+          _c("div", { staticClass: "col-xs-10 col-sm-3" }, [
             _c("input", {
               directives: [
                 {
@@ -37462,7 +37466,7 @@ var render = function() {
             [_vm._v("a")]
           ),
           _vm._v(" "),
-          _c("div", { staticClass: "col-xs-11 col-sm-3" }, [
+          _c("div", { staticClass: "col-xs-10 col-sm-3" }, [
             _c("input", {
               directives: [
                 {
@@ -50226,7 +50230,7 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   getColumnChartData: function getColumnChartData(params) {
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/columchartdata', params).then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/columnchartdata', params).then(function (response) {
       return response.data;
     });
   }

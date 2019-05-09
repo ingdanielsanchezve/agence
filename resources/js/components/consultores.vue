@@ -215,6 +215,7 @@
                     $('#pieChart, #columnChart').css('display', 'none').css('height', 0)
                     if(this.fromDate > this.toDate){
                         this.error_dates = true;
+                        this.no_records = false;
                         return 0;
                     }else{
                         ConsultoresAPI.getRelatorio(
@@ -241,6 +242,7 @@
                     $('#receitas, #columnChart').css('display', 'none').css('height', 0)
                     if(this.fromDate > this.toDate){
                         this.error_dates = true;
+                        this.no_records = false;
                         return 0;
                     }else{
                         ConsultoresAPI.getPieChartData(
@@ -281,6 +283,7 @@
                     $('#pieChart, #receitas').css('display', 'none').css('height', 0)
                     if(this.fromDate > this.toDate){
                         this.error_dates = true;
+                        this.no_records = false;
                         return 0;
                     }else{
 
