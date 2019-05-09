@@ -6,11 +6,11 @@
             <div class="form-group row">
                 <div class="col-md-12 col-sm-6">
                     <label for="from-date" class="col-xs-1 col-sm-1 col-form-label">De</label>
-                    <div class="col-xs-11 col-sm-3">
+                    <div class="col-xs-10 col-sm-3">
                         <input v-model="fromDate" class="form-control" type="month" value="2017-01" min="2003-01" max="2007-12" id="from-date">
                     </div>
                     <label for="to-date" class="col-xs-1 col-sm-1 col-form-label">a</label>
-                    <div class="col-xs-11 col-sm-3">
+                    <div class="col-xs-10 col-sm-3">
                         <input v-model="toDate" class="form-control" type="month" value="2017-12" min="2003-01" max="2007-12" id="to-date">
                     </div>
                 </div>
