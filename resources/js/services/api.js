@@ -23,7 +23,7 @@ export default {
     },
 
     getColumnChartData(params){
-        return axios.post('/columchartdata', params)
+        return axios.post('/columnchartdata', params)
                     .then(function (response) {
                         return response.data;
                     })
