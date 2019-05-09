@@ -1,45 +1,50 @@
-# Rauxa FE Coding Challenge Solution
+# Agence Selection Test
 
-#### Rauxa FE Coding Challenge Solution
+#### Agence Selection Test Solution
 
-![screenshot_frontend](https://user-images.githubusercontent.com/42616141/44802244-36058200-ab89-11e8-84e8-5ecc03b4684e.png)
+* Consultor Listed
+List of consultors returned from database.
 
-## Description of the problem.
-Create a service that allows for a user to search for a GitHub username. On a successful search return, display the user's GitHub handle, follower count, and a list of the user's followers, Additionally for users with many followers Create a "load more" button that, when clicked, fetches the next payload of followers. 
+![Consultor Listed](https://user-images.githubusercontent.com/42616141/57425058-d8313b80-71e7-11e9-9013-c506638ffd18.png)
 
-## Solution
-For the solution of this coding challenge, the laravel framework for the backend was used since it is a very popular php framework that could also be used to manage the routes of the API endpoints and to create tests to test the application.
+* Consultors Selected
+Each consultor selected is inserted in a list of selected consultors.
 
-As for the connection with GitHub, a controller was created which makes requests to the API using authentication by means of the user name and the token that must be established in the ```.env``` file of the application.
+![Consultors Selected](https://user-images.githubusercontent.com/42616141/57425092-f139ec80-71e7-11e9-9a82-00c55d37f931.png)
 
-The frontend view is rendered using a HTML file, it was modified the laravel config view file to look for the views in the ```public/views``` directory instead of the ```resource/view``` default laravel directory.
+* Receitas Listed
+After select the dates and the consultors, the user click on relatorio button and the receitas for each selected consultor are listed if the have records for the selected period.
 
-On Page load a request to the ```/user``` endpoint is made to get the authenticated user data and show user avatar, name, username and url link to the ser GitHub profile page.
+![Receitas Listed](https://user-images.githubusercontent.com/42616141/57425107-0282f900-71e8-11e9-91c3-8cf3c363beb3.png)
 
-The search of the user is done from the application by means of an asynchronous request to the ```/search/:user``` endpoint with the AngularJs ```$http.get```  which performs the search in 2 phases. First the information of the corresponding user is obtained and later the user's followers.
+* Column Chart
+After select the dates and the consultors, the user click on gráfico button and a chart representing the receitas for each selected consultor are represented if the have records for the selected period, additionally a line representing the average mid cost is added to show if the consultor performance is over the company costs.
 
-While the searching of users or followers are perfomed the user is notified with alerts in the UI, after the search is done, the alerts are hidden.
+![Column Chart](https://user-images.githubusercontent.com/42616141/57425123-1890b980-71e8-11e9-8860-5563b42dfa60.png)
 
-Depending on the number of followers of the user proceeds to perform the pager that is displayed in the front site because the GitHub's API returns maximum 30 followers in each request.
+* Pie Chart
+After select the dates and the consultors, the user click on pizza button and a chart representing the percentage of receitas for each selected consultor are represented if the have records for the selected period.
 
-In case the user has more than 300 followers, a button is added at the end of the pager to show the additional followers since in this way the interface is maintained.
+![Pie Chart](https://user-images.githubusercontent.com/42616141/57425142-27776c00-71e8-11e9-8169-baa5442cc6af.png)
 
-For each GitHub user their avatar, name, username, bio, location and url are displayed.
+* Consultor without records
+If a consultor is selected and there is no any record in the selected period, the app shows an alert indicating there's no record for the selectec consultor in the period selected.
 
-![user_profile](https://user-images.githubusercontent.com/42616141/44802950-0e171e00-ab8b-11e8-912a-79fd5f9f264e.png)
+![Consultor without records](https://user-images.githubusercontent.com/42616141/57425483-4e826d80-71e9-11e9-8d56-7479b0d08e7e.png)
 
-Each followers is shown on a contact card where you can see your username, avatar and 2 buttons, one to perform the search of that user within the application and another to see the profile on the site. In the followers card isn't showm the user name because that field is not provide it in the GitHub ```users/:user/followers``` endpoint.
+* Selected Dates Error
+If a date from selected is geater than the to date, the app shows an alert indicating there's an error in the selected dates.
 
-![follower_card](https://user-images.githubusercontent.com/42616141/44802362-84b31c00-ab89-11e8-9381-5ee975e41f67.png)
+![Selected Dates Error](https://user-images.githubusercontent.com/42616141/57425503-60641080-71e9-11e9-875f-350c68661adb.png)
+
 
 ## Solution URL
 * Link to the hosted application. [Url](https://testagence.ml)
 
 ## Requirements
 * Laravel Framework for Backend
-* AngularJs 1.7.3 for Frontend
-* GitHub Users and Followers API endpoints consuming
-* Based on Gentellela Alela Admin Dashboard
+* VueJs for Frontend Components (Integrated with Laravel Blades)
+* Based on Neptune Admin Dashboard
 
 ## Usage
 1. Clone the repo in your local system
@@ -53,21 +58,16 @@ Each followers is shown on a contact card where you can see your username, avata
 
 Tests were created using PHPUnit in Laravel to test this:
 
-1. WebSite front is working
-2. GitHub User authenticated data
-3. GitHub user search
-4. GitHub user search user not found
-5. GitHub user followers search
-6. GitHub user not have followers
+1. WebSite is working fine
+2. Consultors are listed
+3. Consultors Receitas are returned from database
+4. Column Chart data of Consultors receitas in the selected period are returned from database
+5. Pie Chart data of Consultors receitas in the selected period are returned from database
 
 To run tests execute commad ```vendor/bin/phpunit``` in your project root
 
-## Pendings
-
-If i would have more time to spend on the project i would like to add some additional test for the frontend code to the test app service and controller and to verify to have the correct response expected were returned from Github API.
-
 ## History
-2018-08-30 - First public version
+2019-05-08 - First public version
 
 ## Credits
 - Developed by: Daniel Sánchez
