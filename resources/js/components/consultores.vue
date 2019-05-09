@@ -197,6 +197,7 @@
                         this.seleccionados = [];
                         this.listado = [];
                         this.no_records = false;
+                        this.error_dates = false;
                         $('#pieChart').html("");
                         $('#columnChart').html("");
                     }
