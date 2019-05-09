@@ -51,8 +51,10 @@ If a date from selected is geater than the to date, the app shows an alert indic
 2. Install [Laravel Framework ](https://laravel.com/docs/5.8/installation)
 3. Install backend dependencies ```composer install```
 4. Install frontend dependencies ```npm install```
-5. Server Up with executing command ```php artisan serve```
-6. Select any Consultors listed
+6. Restore the database using the database.sql file
+7. Create a .env file with user credentials to access the database
+8. Server Up with executing command ```php artisan serve```
+9. Select any Consultors listed
 
 ## Testing
 
